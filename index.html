@@ -5606,6 +5606,728 @@ input[type="text"]:focus, textarea:focus, select:focus {
   overflow: hidden !important;
   box-shadow: var(--shadow) !important;
 }
+
+/* ═══════════════════════════════════════════════
+   DREAM DASHBOARD — REDESIGNED LAYOUT
+   ═══════════════════════════════════════════════ */
+
+/* ── Hero Banner ── */
+.dash-hero-banner {
+  position:relative;
+  background:linear-gradient(135deg,#01255e 0%,#0d47a1 55%,#1976D2 100%);
+  border-radius:20px;padding:22px 24px 0;margin-bottom:16px;
+  overflow:hidden;box-shadow:0 6px 28px rgba(1,37,94,.28);
+  display:grid;grid-template-columns:1fr auto;
+  grid-template-rows:auto auto;animation:heroFade .4s ease both;
+}
+.dash-hero-deco-1 {
+  position:absolute;right:-50px;top:-50px;width:240px;height:240px;
+  border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none;
+}
+.dash-hero-deco-2 {
+  position:absolute;left:-30px;bottom:0;width:160px;height:160px;
+  border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none;
+}
+.dash-hero-left {
+  grid-column:1;grid-row:1;display:flex;flex-direction:column;
+  gap:4px;position:relative;z-index:1;padding-bottom:16px;
+}
+.dash-hero-date {
+  font-family:'DM Mono',monospace;font-size:.58rem;
+  color:rgba(187,222,251,.65);letter-spacing:1.5px;text-transform:uppercase;
+}
+.dash-hero-greeting { display:flex;align-items:center;gap:8px;margin-top:2px; }
+.dash-hero-emoji { font-size:1.5rem;flex-shrink:0; }
+.dash-hero-greet-text {
+  font-family:'Plus Jakarta Sans','Syne',sans-serif;
+  font-size:clamp(1.3rem,3vw,2rem);font-weight:800;
+  color:#fff;letter-spacing:-.5px;line-height:1.1;
+}
+.dash-hero-quote {
+  font-size:.72rem;color:rgba(187,222,251,.7);
+  font-style:italic;line-height:1.45;max-width:400px;margin-top:2px;
+}
+.dash-hero-right {
+  grid-column:2;grid-row:1;display:flex;flex-direction:column;
+  align-items:flex-end;justify-content:flex-start;
+  position:relative;z-index:1;padding-bottom:16px;padding-left:16px;
+}
+.dash-hero-pct {
+  font-family:'Plus Jakarta Sans','Syne',sans-serif;
+  font-size:clamp(2.4rem,6vw,3.5rem);font-weight:800;
+  color:#fff;line-height:1;letter-spacing:-2px;
+}
+.dash-hero-pct-lbl {
+  font-family:'DM Mono',monospace;font-size:.52rem;
+  color:rgba(187,222,251,.55);letter-spacing:1.5px;
+  text-transform:uppercase;margin-top:2px;text-align:right;
+}
+.dash-hero-progress-row {
+  grid-column:1/-1;grid-row:2;padding:0 0 16px;
+  position:relative;z-index:1;display:flex;flex-direction:column;gap:7px;
+}
+.dash-hero-progress-track {
+  width:100%;height:5px;background:rgba(255,255,255,.15);
+  border-radius:6px;overflow:hidden;
+}
+.dash-hero-progress-fill {
+  height:100%;border-radius:6px;
+  background:linear-gradient(90deg,#64B5F6,#90CAF9);
+  transition:width .8s cubic-bezier(.34,1.2,.64,1);
+}
+.dash-hero-progress-label { display:flex;align-items:center;justify-content:space-between; }
+.dash-hero-progress-msg   { font-size:.7rem;color:rgba(255,215,0,.9);font-weight:600; }
+.dash-hero-habit-count    { font-family:'DM Mono',monospace;font-size:.62rem;color:rgba(187,222,251,.65); }
+
+/* ── 4 Mini Stat Cards ── */
+.dash-mini-stats-row {
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:10px;margin-bottom:18px;
+}
+.dash-mini-stat-card {
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:14px;padding:13px 12px 11px;
+  box-shadow:var(--shadow);display:flex;flex-direction:column;
+  gap:2px;transition:transform .15s,box-shadow .15s;
+}
+.dash-mini-stat-card:hover { transform:translateY(-2px);box-shadow:var(--shadow-lg); }
+.dash-mini-icon { font-size:1.1rem;margin-bottom:3px; }
+.dash-mini-val {
+  font-family:'Plus Jakarta Sans','Syne',sans-serif;
+  font-size:1.3rem;font-weight:800;color:var(--text);line-height:1;letter-spacing:-.5px;
+}
+.dash-mini-lbl {
+  font-size:.51rem;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.8px;font-weight:700;margin-top:1px;
+}
+.dash-mini-bar-wrap { width:100%;height:3px;background:var(--g0);border-radius:3px;overflow:hidden;margin-top:7px; }
+.dash-mini-bar      { height:100%;border-radius:3px;transition:width .6s cubic-bezier(.34,1.2,.64,1); }
+
+/* ── Main 2-Column Layout ── */
+.dash-main-layout {
+  display:grid;grid-template-columns:1fr;gap:14px;margin-bottom:20px;
+}
+@media(min-width:768px) {
+  .dash-main-layout { grid-template-columns:1fr 1fr;align-items:start;gap:16px; }
+}
+.dash-left-col, .dash-right-col { display:flex;flex-direction:column;gap:13px; }
+
+/* ── Shared Card ── */
+.dash-card {
+  background:var(--white);border:1.5px solid var(--border);
+  border-radius:18px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s;
+}
+.dash-card:hover { box-shadow:var(--shadow-lg); }
+.dash-card-head {
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 16px 11px;border-bottom:1px solid var(--g0);
+}
+.dash-card-title {
+  display:flex;align-items:center;gap:7px;
+  font-family:'Plus Jakarta Sans','Syne',sans-serif;
+  font-size:.84rem;font-weight:700;color:var(--g5);
+}
+.dash-card-icon { font-size:.9rem; }
+.dash-view-btn {
+  font-family:'Plus Jakarta Sans','DM Sans',sans-serif;
+  font-size:.61rem;font-weight:700;color:var(--g4);
+  background:var(--white);border:1.5px solid var(--border2);
+  border-radius:8px;padding:4px 9px;cursor:pointer;
+  transition:all .15s;white-space:nowrap;flex-shrink:0;
+}
+.dash-view-btn:hover { background:var(--g4);color:#BBDEFB;border-color:var(--g4); }
+
+/* ── Habits badge ── */
+.dash-habits-count-badge {
+  font-family:'DM Mono',monospace;font-size:.59rem;
+  background:var(--g0);color:var(--g4);
+  border:1px solid var(--border2);border-radius:20px;padding:2px 8px;font-weight:600;
+}
+#dashTodayHabitsCard .prog-habit-item      { padding:10px 16px !important; }
+#dashTodayHabitsCard .prog-cat-group-head  { padding:7px 16px 4px !important;font-size:.67rem !important; }
+#dashTodayHabitsCard .prog-habit-name      { font-size:.81rem !important; }
+
+/* ── Top3 card ── */
+.dash-top3-card .prog-top3-grid { padding:10px 14px 14px !important; }
+
+/* ── Focus Timer ── */
+.dash-left-col .focus-timer-card { border-radius:18px !important; }
+.ft-goal-row { padding:12px 16px 0;display:flex;align-items:center; }
+
+/* ── Daily Note card ── */
+.dash-note-card .dash-card-head         { cursor:pointer;user-select:none; }
+.dash-note-card .prog-section-head      { border-bottom:none !important;background:none !important; }
+.dash-note-card .prog-notes-body        { padding:12px 14px 14px !important; }
+.dash-note-card .prog-notes-textarea    { min-height:100px !important;font-size:.81rem !important; }
+.dash-note-card .prog-notes-footer      { margin-top:8px; }
+
+/* ── Goals card ── */
+.dash-goals-counts {
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  padding:11px 12px 10px;border-bottom:1px solid var(--g0);
+}
+.dash-goals-count-box { border-radius:12px;padding:11px 10px;text-align:center; }
+.dash-goals-count-active { background:var(--g0);border:1.5px solid var(--border2); }
+.dash-goals-count-done   { background:#f0faf0;border:1.5px solid #a5d6a7; }
+.dash-goals-count-val {
+  font-family:'Plus Jakarta Sans','Syne',sans-serif;
+  font-size:1.45rem;font-weight:800;color:var(--g4);line-height:1;letter-spacing:-1px;
+}
+.dash-goals-count-done .dash-goals-count-val { color:#2E7D32; }
+.dash-goals-count-lbl {
+  font-size:.49rem;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);font-weight:700;margin-top:3px;
+}
+#progGoalsOverviewBody .prog-goal-mini-card { border-radius:10px !important;margin-bottom:8px; }
+
+/* ── Hide legacy replaced elements ── */
+#view-progress .prog-top-row,
+#view-progress .prog-rings-row,
+#view-progress .prog-sections-grid { display:none !important; }
+
+/* ── Dark mode ── */
+[data-theme="dark"] .dash-hero-banner {
+  background:linear-gradient(135deg,#020a18 0%,#061428 55%,#0d2240 100%) !important;
+}
+[data-theme="dark"] .dash-mini-stat-card,
+[data-theme="dark"] .dash-card            { background:var(--white);border-color:var(--border); }
+[data-theme="dark"] .dash-goals-count-active { background:var(--g0); }
+[data-theme="dark"] .dash-goals-count-done   { background:#0a1f0a;border-color:#2e5c2e; }
+
+/* ── Mobile <= 767px ── */
+@media(max-width:767px) {
+  .dash-hero-banner     { padding:16px 16px 0;border-radius:16px; }
+  .dash-hero-greet-text { font-size:1.35rem; }
+  .dash-hero-pct        { font-size:2.3rem; }
+  .dash-hero-quote      { font-size:.66rem;max-width:none; }
+  .dash-mini-stats-row  { grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px; }
+  .dash-mini-stat-card  { padding:11px 10px 9px;border-radius:12px; }
+  .dash-mini-val        { font-size:1.2rem; }
+  .dash-mini-lbl        { font-size:.49rem; }
+  .dash-card            { border-radius:16px; }
+  .dash-card-head       { padding:11px 14px 9px; }
+  .dash-card-title      { font-size:.79rem; }
+  .dash-goals-count-val { font-size:1.25rem; }
+  .dash-left-col .focus-timer-card { border-radius:16px !important; }
+  .ft-goal-row          { padding:10px 14px 0; }
+}
+
+/* ══════════════════════════════════════════════
+   NEW PLANNER VIEW v2 — Matching screenshots
+══════════════════════════════════════════════ */
+
+/* Page wrapper */
+.pv2-page { padding: 0 !important; }
+
+/* ── Nav Bar (screenshot 1 & 2 style) ── */
+.pv2-nav {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: var(--white);
+  border-radius: 14px;
+  border: 1.5px solid var(--border);
+  padding: 0 6px;
+  margin-bottom: 28px;
+  box-shadow: var(--shadow);
+  height: 56px;
+}
+.pv2-nav-center {
+  flex: 1;
+  text-align: center;
+  padding: 0 8px;
+}
+.pv2-date-label {
+  font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.2;
+}
+.pv2-date-sub {
+  font-size: .64rem;
+  color: var(--muted);
+  font-weight: 500;
+  margin-top: 1px;
+}
+.pv2-arrow-btn {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  color: var(--muted);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.pv2-arrow-btn:hover { border-color: var(--g3); color: var(--g4); background: var(--g0); }
+.pv2-today-btn {
+  padding: 8px 20px;
+  border-radius: 10px;
+  background: var(--g4);
+  color: #BBDEFB;
+  border: none;
+  font-size: .82rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin: 0 4px;
+}
+.pv2-today-btn:hover { background: var(--g5); }
+
+/* ── Progress Bar ── */
+.pv2-progress-wrap {
+  position: relative;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  margin-top: 14px;
+  margin-bottom: 24px;
+  overflow: visible;
+}
+.pv2-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--g3), var(--g2));
+  border-radius: 3px;
+  transition: width .4s ease;
+}
+.pv2-progress-label {
+  position: absolute;
+  right: 0;
+  top: -20px;
+  font-family: 'DM Mono', monospace;
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--g4);
+}
+
+/* ── Two-column layout ── */
+.pv2-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+@media(min-width: 900px) {
+  .pv2-layout { flex-direction: row; align-items: flex-start; gap: 20px; }
+  .pv2-main    { flex: 1; min-width: 0; }
+  .pv2-sidebar { flex-shrink: 0; width: 300px; }
+}
+
+/* ── Add Task Card ── */
+.pv2-add-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+}
+.pv2-add-row1 {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.pv2-add-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--border);
+  font-size: .86rem;
+  background: var(--white);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.pv2-add-input:focus { border-color: var(--g3); box-shadow: 0 0 0 3px rgba(21,101,192,.1); }
+.pv2-add-input::placeholder { color: var(--dim); }
+.pv2-add-btn {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  background: var(--g4);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+  flex-shrink: 0;
+}
+.pv2-add-btn:hover { background: var(--g5); transform: scale(1.05); }
+.pv2-add-row2 { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+/* ── Custom Category Dropdown (matching screenshot 4) ── */
+.pv2-drop-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 12px;
+  background: var(--white);
+  cursor: pointer;
+  min-width: 120px;
+  user-select: none;
+}
+.pv2-drop-wrap:hover { border-color: var(--border2); }
+.pv2-cat-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pv2-cat-label {
+  font-size: .8rem;
+  font-weight: 500;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  flex: 1;
+}
+.pv2-drop-chevron { color: var(--muted); flex-shrink: 0; }
+.pv2-drop-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 160px;
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(13,71,161,.15);
+  z-index: 999;
+  overflow: hidden;
+  padding: 6px 0;
+}
+.pv2-drop-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  font-size: .82rem;
+  font-weight: 500;
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background .1s;
+  position: relative;
+}
+.pv2-drop-opt:hover { background: var(--g0); }
+.pv2-drop-opt.selected { color: var(--g4); font-weight: 600; }
+.pv2-drop-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.pv2-drop-check {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* ── Time Input ── */
+.pv2-time-input {
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border);
+  font-size: .8rem;
+  font-family: 'DM Mono', monospace;
+  color: var(--text);
+  background: var(--white);
+  outline: none;
+  cursor: pointer;
+  min-width: 120px;
+}
+.pv2-time-input:focus { border-color: var(--g3); }
+
+/* ── TOP 3 FOCUS TASKS card (above ALL TASKS) ── */
+.pv2-top3-card {
+  background: #FFF8F0;
+  border: 1.5px solid #FFE0B2;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.pv2-top3-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  font-size: .72rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: .8px;
+  font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+}
+.pv2-top3-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-top: 1px solid #FFE0B2;
+  transition: background .1s;
+}
+.pv2-top3-row.done .pv2-top3-name { text-decoration: line-through; color: var(--dim); }
+.pv2-top3-num {
+  font-family: 'DM Mono', monospace;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--dim);
+  width: 18px;
+  flex-shrink: 0;
+}
+.pv2-top3-check {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1.8px solid var(--border2);
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+  background: var(--white);
+}
+.pv2-top3-check:hover { border-color: var(--g3); background: var(--g0); }
+.pv2-top3-check.checked { background: var(--g3); border-color: var(--g3); }
+.pv2-top3-check.checked::after { content: '✓'; color: #fff; font-size: .6rem; font-weight: 800; }
+.pv2-top3-name {
+  font-size: .86rem;
+  font-weight: 500;
+  color: var(--text);
+  flex: 1;
+}
+
+/* ── ALL TASKS card ── */
+.pv2-tasks-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.pv2-tasks-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-bottom: 1.5px solid var(--g0);
+}
+.pv2-tasks-header-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .68rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: .8px;
+  font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+}
+.pv2-tasks-header-left svg { color: var(--muted); }
+.pv2-task-count {
+  font-family: 'DM Mono', monospace;
+  font-size: .68rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+.pv2-task-list { padding: 2px 0; }
+
+/* ── Task Row ── */
+.pv2-task-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 18px;
+  border-bottom: 1px solid var(--g0);
+  transition: background .1s;
+}
+.pv2-task-row:last-child { border-bottom: none; }
+.pv2-task-row:hover { background: #f5f8ff; }
+.pv2-task-row.done .pv2-task-name { text-decoration: line-through; color: var(--dim); }
+
+/* Checkbox */
+.pv2-task-check {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1.8px solid var(--border2);
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+  background: var(--white);
+}
+.pv2-task-check:hover { border-color: var(--g3); background: var(--g0); }
+.pv2-task-check.checked { background: var(--g3); border-color: var(--g3); }
+.pv2-task-check.checked::after { content: '✓'; color: #fff; font-size: .6rem; font-weight: 800; }
+
+/* Task name */
+.pv2-task-body { flex: 1; min-width: 0; }
+.pv2-task-name {
+  font-size: .85rem;
+  font-weight: 500;
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* Actions group (right side: time + pill + star + delete) */
+.pv2-task-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* Time badge */
+.pv2-task-time {
+  font-family: 'DM Mono', monospace;
+  font-size: .64rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 20px;
+  background: var(--g0);
+  color: var(--g4);
+  border: 1px solid var(--border2);
+  white-space: nowrap;
+}
+
+/* Category pill — outline style matching screenshot */
+.pv2-task-cat-pill {
+  font-size: .66rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 20px;
+  border: 1.5px solid;
+  white-space: nowrap;
+  letter-spacing: .1px;
+}
+.pv2-task-cat-pill.cat-do       { color: #2e7d32; border-color: #66bb6a; background: transparent; }
+.pv2-task-cat-pill.cat-schedule  { color: #1565c0; border-color: #64b5f6; background: transparent; }
+.pv2-task-cat-pill.cat-delegate  { color: #e65100; border-color: #ffa726; background: transparent; }
+.pv2-task-cat-pill.cat-eliminate { color: #c62828; border-color: #ef5350; background: transparent; }
+
+/* Star button — ☆ outline / ★ orange filled */
+.pv2-task-star {
+  width: 28px; height: 28px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  color: var(--dim);
+  font-size: 1rem;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: all .12s;
+  line-height: 1;
+}
+.pv2-task-star:hover { color: #f9a825; border-color: #f9a825; background: #fff8e1; }
+.pv2-task-star.starred {
+  color: #f9a825;
+  border-color: #f9a825;
+  background: #fff8e1;
+}
+
+/* Delete button */
+.pv2-task-del {
+  width: 28px; height: 28px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  cursor: pointer;
+  color: var(--dim);
+  font-size: .78rem;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+  transition: all .12s;
+}
+.pv2-task-del:hover { color: var(--red); border-color: var(--red-border); background: var(--red-bg); }
+
+/* ── Empty State ── */
+.pv2-empty {
+  padding: 48px 20px;
+  text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.pv2-empty-icon { font-size: 2.2rem; opacity: .35; }
+.pv2-empty-text { font-size: .82rem; color: var(--muted); font-weight: 500; }
+
+/* ── Priority Matrix Sidebar ── */
+.pv2-matrix-card {
+  background: var(--white);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.pv2-matrix-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 16px;
+  font-size: .68rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: .8px;
+  font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+}
+.pv2-quadrant {
+  padding: 12px 16px;
+  border-top: 1px solid var(--g0);
+}
+/* Coloured backgrounds matching screenshots */
+.pv2-q-do       { background: #f0fff4; border: 1.5px solid #a5d6a7; border-top: none; border-left: none; border-right: none; }
+.pv2-q-schedule  { background: #f0f6ff; border: 1.5px solid #90caf9; border-top: none; border-left: none; border-right: none; }
+.pv2-q-delegate  { background: #fffde7; border: 1.5px solid #ffe082; border-top: none; border-left: none; border-right: none; }
+.pv2-q-eliminate { background: #fff5f5; border: 1.5px solid #ef9a9a; border-top: none; border-left: none; border-right: none; }
+
+/* Make the matrix quadrants full-width bordered cards like screenshots */
+.pv2-matrix-card .pv2-quadrant:first-of-type { border-top: 1px solid var(--g0); }
+
+.pv2-q-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.pv2-q-dot { width: 11px; height: 11px; border-radius: 50%; flex-shrink: 0; }
+.pv2-q-label {
+  font-size: .68rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: .6px;
+  font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+}
+.pv2-q-tasks { display: flex; flex-direction: column; gap: 3px; min-height: 16px; }
+.pv2-q-empty { font-size: .73rem; color: var(--dim); font-style: italic; }
+.pv2-q-task-name { font-size: .75rem; color: var(--text); font-weight: 400; line-height: 1.4; }
+.pv2-q-task-name.done-q { text-decoration: line-through; color: var(--dim); }
+
+/* ── Dark mode ── */
+[data-theme="dark"] .pv2-add-card,
+[data-theme="dark"] .pv2-tasks-card,
+[data-theme="dark"] .pv2-matrix-card,
+[data-theme="dark"] .pv2-nav,
+[data-theme="dark"] .pv2-drop-menu {
+  background: var(--white) !important;
+  border-color: var(--border) !important;
+}
+[data-theme="dark"] .pv2-add-input { background: var(--page) !important; color: var(--text) !important; }
+[data-theme="dark"] .pv2-top3-card { background: #1a1200 !important; border-color: #3a2800 !important; }
+[data-theme="dark"] .pv2-top3-row { border-color: #3a2800 !important; }
+[data-theme="dark"] .pv2-q-do       { background: #071a0a !important; }
+[data-theme="dark"] .pv2-q-schedule  { background: #060e1f !important; }
+[data-theme="dark"] .pv2-q-delegate  { background: #1a1200 !important; }
+[data-theme="dark"] .pv2-q-eliminate { background: #1a0707 !important; }
+[data-theme="dark"] .pv2-drop-opt:hover { background: rgba(255,255,255,.07) !important; }
+[data-theme="dark"] .pv2-task-star { background: var(--white) !important; }
+[data-theme="dark"] .pv2-task-del  { background: var(--white) !important; }
+
+/* ── Mobile ── */
+@media(max-width: 767px) {
+  .pv2-nav { padding: 0 4px; height: 52px; }
+  .pv2-date-label { font-size: .92rem; }
+  .pv2-add-card { padding: 12px 14px; }
+  .pv2-add-row2 { gap: 8px; }
+  .pv2-task-row { padding: 10px 14px; }
+  .pv2-task-actions { opacity: 1 !important; }
+  .pv2-matrix-card { margin-top: 4px; }
+  .pv2-drop-menu { position: fixed; left: 14px; right: 14px; top: auto; width: auto; }
+}
 </style>
 <body>
 
@@ -5623,31 +6345,28 @@ input[type="text"]:focus, textarea:focus, select:focus {
   <div class="mobile-nav-inner">
     <button class="mobile-nav-btn active" onclick="switchView('progress')" data-view="progress">
       <span class="mnav-icon">⚡</span>
-      <span class="mnav-label">Progress</span>
-    </button>
-    <button class="mobile-nav-btn" onclick="switchView('planner')" data-view="planner">
-      <span class="mnav-icon">📅</span>
-      <span class="mnav-label">Planner</span>
+      <span class="mnav-label">Dashboard</span>
     </button>
     <button class="mobile-nav-btn" onclick="switchView('habitdash')" data-view="habitdash">
       <span class="mnav-icon">🎯</span>
       <span class="mnav-label">Habits</span>
     </button>
-    <button class="mobile-nav-btn" onclick="switchView('weekly')" data-view="weekly">
-      <span class="mnav-icon">📊</span>
-      <span class="mnav-label">Weekly</span>
+    <button class="mobile-nav-btn" onclick="switchView('planner')" data-view="planner">
+      <span class="mnav-icon">📅</span>
+      <span class="mnav-label">Planner</span>
     </button>
     <button class="mobile-nav-btn" onclick="switchView('goals')" data-view="goals">
       <span class="mnav-icon">🏆</span>
       <span class="mnav-label">Goals</span>
     </button>
-    <button class="mobile-nav-btn" onclick="switchView('year')" data-view="year">
-      <span class="mnav-icon">📆</span>
-      <span class="mnav-label">Year</span>
-    </button>
     <button class="mobile-nav-btn" onclick="switchView('coach')" data-view="coach">
       <span class="mnav-icon">🤖</span>
-      <span class="mnav-label">AI Coach</span>
+      <span class="mnav-label">Focus</span>
+    </button>
+    <button class="mobile-nav-btn" onclick="switchView('weekly')" data-view="weekly">
+      <span class="mnav-icon">📊</span>
+      <span class="mnav-label">Weekly</span>
+    </button>
     </button>
   </div>
 </nav>
@@ -5776,26 +6495,72 @@ input[type="text"]:focus, textarea:focus, select:focus {
       </div>
     </div>
 
-    <!-- ── DAILY GREETING ── -->
-    <div class="daily-greeting-banner" id="dailyGreetingBanner">
-      <span class="dgb-emoji" id="dgbEmoji">👋</span>
-      <div class="dgb-content">
-        <div class="dgb-greeting" id="dgbGreeting">Good morning!</div>
-        <div class="dgb-sub" id="dgbSub">Ready to make today count?</div>
+    <!-- ── HERO GREETING BANNER (screenshot-style) ── -->
+    <div class="dash-hero-banner" id="dailyGreetingBanner">
+      <!-- decorative circles -->
+      <div class="dash-hero-deco-1"></div>
+      <div class="dash-hero-deco-2"></div>
+
+      <div class="dash-hero-left">
+        <div class="dash-hero-date" id="dashHeroDate">FRIDAY, APRIL 24</div>
+        <div class="dash-hero-greeting">
+          <span id="dgbEmoji" class="dash-hero-emoji">🌙</span>
+          <span id="dgbGreeting" class="dash-hero-greet-text">Good evening!</span>
+        </div>
+        <div class="dash-hero-quote" id="dailyQuoteText">"Loading your daily quote…"</div>
       </div>
-      <div class="dgb-streak-pill" id="dgbStreakPill" style="display:none">
-        <span class="dgb-streak-fire">🔥</span>
-        <div>
-          <div class="dgb-streak-val" id="dgbStreakVal">0</div>
-          <div class="dgb-streak-lbl">day streak</div>
+
+      <div class="dash-hero-right">
+        <div class="dash-hero-pct" id="dashHeroPct">0%</div>
+        <div class="dash-hero-pct-lbl">TODAY</div>
+        <!-- Hidden compat stubs -->
+        <div style="display:none">
+          <div id="dgbSub"></div>
+          <div id="dgbStreakPill">
+            <span id="dgbStreakFire">🔥</span>
+            <div><div id="dgbStreakVal">0</div><div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress bar row -->
+      <div class="dash-hero-progress-row">
+        <div class="dash-hero-progress-track">
+          <div class="dash-hero-progress-fill" id="dashHeroProgressFill" style="width:0%"></div>
+        </div>
+        <div class="dash-hero-progress-label">
+          <span class="dash-hero-progress-msg" id="dashHeroMsg">🚀 Great start! 0 down, keep building!</span>
+          <span class="dash-hero-habit-count" id="dashHeroHabitCount">0/0 habits</span>
         </div>
       </div>
     </div>
 
-    <!-- ── DAILY QUOTE ── -->
-    <div class="daily-quote-card" id="dailyQuoteCard">
-      <span class="dqc-icon">💬</span>
-      <div class="dqc-text" id="dailyQuoteText">Loading…</div>
+    <!-- ── 4 MINI STAT CARDS ── -->
+    <div class="dash-mini-stats-row">
+      <div class="dash-mini-stat-card">
+        <span class="dash-mini-icon" style="color:#1565C0">✅</span>
+        <div class="dash-mini-val" id="dashStatHabitsDone">3/7</div>
+        <div class="dash-mini-lbl">Habits Done</div>
+        <div class="dash-mini-bar-wrap"><div class="dash-mini-bar" id="dashStatHabitsBar" style="background:#1565C0;width:43%"></div></div>
+      </div>
+      <div class="dash-mini-stat-card">
+        <span class="dash-mini-icon" style="color:#0097A7">⏱</span>
+        <div class="dash-mini-val" id="dashStatFocusTime">0m</div>
+        <div class="dash-mini-lbl">Focus Time</div>
+        <div class="dash-mini-bar-wrap"><div class="dash-mini-bar" id="dashStatFocusBar" style="background:#0097A7;width:0%"></div></div>
+      </div>
+      <div class="dash-mini-stat-card">
+        <span class="dash-mini-icon" style="color:#7B1FA2">🏆</span>
+        <div class="dash-mini-val" id="dashStatGoalsActive">0</div>
+        <div class="dash-mini-lbl">Goals Active</div>
+        <div class="dash-mini-bar-wrap"><div class="dash-mini-bar" id="dashStatGoalsBar" style="background:#7B1FA2;width:0%"></div></div>
+      </div>
+      <div class="dash-mini-stat-card">
+        <span class="dash-mini-icon" style="color:#F9A825">⚡</span>
+        <div class="dash-mini-val" id="dashStatDayScore">0%</div>
+        <div class="dash-mini-lbl">Day Score</div>
+        <div class="dash-mini-bar-wrap"><div class="dash-mini-bar" id="dashStatScoreBar" style="background:#F9A825;width:0%"></div></div>
+      </div>
     </div>
 
     <!-- ── STREAK SHIELD BANNER ── -->
@@ -5809,8 +6574,8 @@ input[type="text"]:focus, textarea:focus, select:focus {
       <button class="ssb-dismiss" onclick="document.getElementById('streakShieldBanner').classList.remove('visible')">✕</button>
     </div>
 
-    <!-- Date nav bar -->
-    <div class="prog-date-nav">
+    <!-- Date nav bar (hidden - date shown in hero banner) -->
+    <div class="prog-date-nav" style="display:none">
       <button class="prog-nav-btn" onclick="progChangeDay(-1)">‹</button>
       <div class="prog-date-center">
         <div class="prog-date-label" id="progDateLabel">Today</div>
@@ -5820,82 +6585,61 @@ input[type="text"]:focus, textarea:focus, select:focus {
       <button class="prog-nav-btn" onclick="progChangeDay(1)">›</button>
     </div>
 
-    <!-- ══ TOP ROW: Progress Hero (left) + Focus Timer (right) ══ -->
-    <div class="prog-top-row">
+    <!-- ══ MAIN DASHBOARD LAYOUT ══ -->
+    <div class="dash-main-layout">
 
-      <!-- Hero progress card — flip card layout -->
-      <div class="prog-hero-flip-container" id="progHeroFlipContainer">
+    <!-- LEFT COLUMN: Top 3 Focus + Focus Timer + Daily Note -->
+    <div class="dash-left-col">
+
+      <!-- JS compat hidden hero card -->
+      <div style="display:none">
+        <div class="prog-top-row">
+        <div class="prog-hero-flip-container" id="progHeroFlipContainer">
         <div class="prog-hero" id="progHero" role="button" aria-label="Flip card to see stats" tabindex="0">
-
-          <!-- Hidden elements kept for JS compatibility -->
           <div class="prog-hero-left" style="display:none"><div class="prog-hero-pct" id="progHeroPct">0%</div></div>
           <div class="prog-hero-right" style="display:none"><div class="prog-donut-wrap" style="display:none"><svg class="prog-donut-svg" viewBox="0 0 120 120"><circle class="prog-donut-bg" cx="60" cy="60" r="50"/><circle class="prog-donut-fill" cx="60" cy="60" r="50" id="progMainRingFill"/></svg><div class="prog-donut-inner"><div class="prog-donut-pct" id="progDonutPct">0%</div><div class="prog-donut-lbl">Overall</div></div></div></div>
-          <span id="progHeroMiniDone"    style="display:none">0</span>
+          <span id="progHeroMiniDone" style="display:none">0</span>
           <span id="progHeroMiniPending" style="display:none">0</span>
-          <span id="progHeroMiniStreak"  style="display:none">0</span>
-
-          <!-- FRONT FACE: Daily Overview donut -->
+          <span id="progHeroMiniStreak" style="display:none">0</span>
           <div class="prog-hero-front">
-            <!-- decorative circles -->
-            <div style="position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none"></div>
-            <div style="position:absolute;left:-20px;bottom:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.03);pointer-events:none"></div>
-
-            <div class="prog-hero-label">Daily Overview</div>
-
-            <div class="prog-hero-donut-center">
-              <div class="prog-donut-wrap">
-                <svg class="prog-donut-svg" viewBox="0 0 120 120">
-                  <circle class="prog-donut-bg" cx="60" cy="60" r="50"/>
-                  <circle class="prog-donut-fill" cx="60" cy="60" r="50" id="progMainRingFill2"/>
-                </svg>
-                <div class="prog-donut-inner">
-                  <div class="prog-donut-pct" id="progDonutPct2">0%</div>
-                  <div class="prog-donut-lbl">Overall</div>
-                </div>
-              </div>
-              <div class="prog-hero-msg" id="progHeroMsg">Loading your progress…</div>
-              <div class="prog-hero-detail" id="progHeroDetail"></div>
-            </div>
-            <div class="hero-flip-hint">👆 Tap to see stats</div>
+            <svg class="prog-donut-svg" viewBox="0 0 120 120"><circle class="prog-donut-bg" cx="60" cy="60" r="50"/><circle class="prog-donut-fill" cx="60" cy="60" r="50" id="progMainRingFill2"/></svg>
+            <div class="prog-donut-pct" id="progDonutPct2">0%</div>
+            <div class="prog-hero-msg" id="progHeroMsg"></div>
+            <div class="prog-hero-detail" id="progHeroDetail"></div>
           </div>
-
-          <!-- BACK FACE: KPI stats -->
           <div class="prog-hero-back">
-            <div style="position:absolute;right:-40px;top:-40px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none"></div>
-            <div style="position:absolute;left:-20px;bottom:-30px;width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.03);pointer-events:none"></div>
-
-            <div class="hero-back-label">Today's Stats</div>
-
-            <div class="hero-kpi-grid">
-              <div class="hero-kpi-card">
-                <span class="hero-kpi-icon">✅</span>
-                <span class="hero-kpi-val" id="heroKpiCompleted">0</span>
-                <span class="hero-kpi-lbl">Completed</span>
-              </div>
-              <div class="hero-kpi-card">
-                <span class="hero-kpi-icon">⏳</span>
-                <span class="hero-kpi-val" id="heroKpiPending">0</span>
-                <span class="hero-kpi-lbl">Pending</span>
-              </div>
-              <div class="hero-kpi-card">
-                <span class="hero-kpi-icon">📋</span>
-                <span class="hero-kpi-val" id="heroKpiTasks">0</span>
-                <span class="hero-kpi-lbl">Tasks Done</span>
-              </div>
-              <div class="hero-kpi-card">
-                <span class="hero-kpi-icon">🎯</span>
-                <span class="hero-kpi-val" id="heroKpiHabits">0</span>
-                <span class="hero-kpi-lbl">Habits Done</span>
-              </div>
-            </div>
-            <div class="hero-flip-hint">👆 Tap to go back</div>
+            <span class="hero-kpi-val" id="heroKpiCompleted">0</span>
+            <span class="hero-kpi-val" id="heroKpiPending">0</span>
+            <span class="hero-kpi-val" id="heroKpiTasks">0</span>
+            <span class="hero-kpi-val" id="heroKpiHabits">0</span>
           </div>
+        </div></div></div>
+      </div>
 
+      <!-- ① Today's Top 3 Focus -->
+      <div class="dash-card dash-top3-card" id="progTop3Section">
+        <div class="dash-card-head">
+          <div class="dash-card-title">
+            <span class="dash-card-icon">⭐</span>
+            Today's Top 3 Focus
+          </div>
+          <button class="dash-view-btn" onclick="switchView('planner')">Planner →</button>
+        </div>
+        <div class="prog-top3-grid" id="progTop3Grid" style="padding:10px 14px 14px">
+          <div class="prog-top3-empty-msg" style="grid-column:1/-1">No top tasks pinned yet — open the Planner to set your Top 3.</div>
         </div>
       </div>
 
-      <!-- Focus Timer card -->
+      <!-- ② Focus Timer -->
       <div class="focus-timer-card" id="focusTimerCard">
+        <!-- Goal badge row -->
+        <div class="ft-goal-row" id="ftGoalRow">
+          <button class="dfm-goal-badge" id="ftGoalBadgeBtn" onclick="dfmOpenGoalModal()" title="Set session goal">
+            <span>🎯</span>
+            <span class="dfm-goal-badge-text" id="ftGoalBadgeText">Set session goal…</span>
+            <span style="opacity:.5;font-size:.55rem">✎</span>
+          </button>
+        </div>
         <div class="focus-timer-header">
           <div class="focus-timer-title">
             <div class="focus-timer-title-icon">⚡</div>
@@ -5907,7 +6651,6 @@ input[type="text"]:focus, textarea:focus, select:focus {
             <div class="focus-timer-daily" id="ftDailySummary">Today: 0h 0m</div>
           </div>
         </div>
-
         <div class="focus-timer-body">
           <div class="focus-timer-clock-wrap">
             <div class="focus-timer-display" id="ftDisplay">00:00:00</div>
@@ -5930,7 +6673,7 @@ input[type="text"]:focus, textarea:focus, select:focus {
               <button class="focus-timer-btn start"  id="ftStartBtn"  onclick="ftStart()">▶ Start</button>
               <button class="focus-timer-btn pause"  id="ftPauseBtn"  onclick="ftPause()"  style="display:none">⏸ Pause</button>
               <button class="focus-timer-btn resume" id="ftResumeBtn" onclick="ftResume()" style="display:none">▶ Resume</button>
-              <button class="focus-timer-btn reset"  id="ftResetBtn"  onclick="ftReset()"  title="Save & reset">🔄</button>
+              <button class="focus-timer-btn reset"  id="ftResetBtn"  onclick="ftReset()" title="Save & reset">🔄</button>
             </div>
             <div class="ft-label-row" id="ftLabelRow">
               <input class="ft-label-input" id="ftSessionLabelInput" type="text" maxlength="32"
@@ -5941,8 +6684,7 @@ input[type="text"]:focus, textarea:focus, select:focus {
             </div>
           </div>
         </div>
-
-        <!-- ── Inline Focus Sessions (below controls, inside same card) ── -->
+        <!-- Inline Focus Sessions -->
         <div class="ft-sessions-inner-wrap" id="ftSessionsInnerWrap">
           <div class="ft-sessions-inner-head" id="ftSessionsToggleHead" onclick="ftToggleSessions()" role="button" aria-expanded="false" aria-controls="ftSessionsPanel" title="Show / hide today's sessions">
             <div class="ft-sessions-collapse-btn">
@@ -5958,239 +6700,125 @@ input[type="text"]:focus, textarea:focus, select:focus {
             <div class="ft-sessions-inner-scroll" id="focusSessionsScrollEl"></div>
           </div>
         </div>
-
-        <!-- Enhanced sessions hidden strip (legacy kept for JS compat) -->
         <div class="focus-timer-sessions" id="ftSessionsStrip" style="display:none">
           <div class="focus-timer-sessions-list" id="ftSessionsList"></div>
         </div>
       </div>
 
-    </div><!-- /.prog-top-row -->
-
-    <!-- ══ TOP 3 TASKS SYNC (Progress Tab) ══ -->
-    <div class="prog-top3-section" id="progTop3Section">
-      <div class="prog-top3-head">
-        <div class="prog-top3-title">
-          <div class="prog-top3-title-icon">🎯</div>
-          Top 3 Focus Tasks
-        </div>
-        <button class="prog-goto-btn" onclick="switchView('planner')" style="font-size:.6rem">Open Planner →</button>
-      </div>
-      <div class="prog-top3-grid" id="progTop3Grid">
-        <div class="prog-top3-empty-msg" style="grid-column:1/-1">No top tasks pinned yet — open the Planner to set your Top 3.</div>
-      </div>
-    </div>
-
-    <!-- Stats summary row — hidden; KPIs now live in the Daily Overview flip card -->
-    <div class="prog-stats-grid" id="progStatsGrid" style="display:none">
-      <div class="prog-stat-card prog-stat-done">
-        <div class="prog-stat-icon">✅</div>
-        <div class="prog-stat-val" id="progTotalDone">0</div>
-        <div class="prog-stat-lbl">Completed</div>
-      </div>
-      <div class="prog-stat-card prog-stat-pending">
-        <div class="prog-stat-icon">⏳</div>
-        <div class="prog-stat-val" id="progTotalPending">0</div>
-        <div class="prog-stat-lbl">Pending</div>
-      </div>
-      <div class="prog-stat-card prog-stat-tasks">
-        <div class="prog-stat-icon">📋</div>
-        <div class="prog-stat-val" id="progTaskDone">0</div>
-        <div class="prog-stat-lbl">Tasks Done</div>
-      </div>
-      <div class="prog-stat-card prog-stat-habits">
-        <div class="prog-stat-icon">🎯</div>
-        <div class="prog-stat-val" id="progHabitDone">0</div>
-        <div class="prog-stat-lbl">Habits Done</div>
-      </div>
-    </div>
-
-    <!-- Dual progress rings row -->
-    <div class="prog-rings-row">
-      <!-- Tasks ring — replaced with full Task Analytics card -->
-      <div class="prog-ring-card" style="padding:0;overflow:hidden;">
-        <div class="task-analytics-head" style="border-bottom:1.5px solid var(--g0);padding:12px 16px 10px;">
-          <div class="task-analytics-title">
-            <span style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#1565c0,#42a5f5);display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;box-shadow:0 2px 8px rgba(13,71,161,.25)">📊</span>
-            Task Analytics
+      <!-- ③ Daily Note -->
+      <div class="dash-card dash-note-card prog-section-card" id="progNotesSection">
+        <div class="dash-card-head prog-section-head" onclick="progToggleSection('notes')" role="button" aria-expanded="true" aria-controls="progNotesSectionBody">
+          <div class="dash-card-title">
+            <span class="dash-card-icon">📝</span>
+            Daily Note
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--g4);background:var(--g0);border:1px solid var(--border2);border-radius:20px;padding:2px 9px;" id="progTaLiveBadge">● Live</span>
-            <button class="prog-goto-btn" onclick="switchView('planner')">Open Planner →</button>
+          <div style="display:flex;align-items:center;gap:8px" onclick="event.stopPropagation()">
+            <span id="progNotesSavedBadge" style="display:none;font-size:.6rem;color:var(--g3);font-weight:700;background:var(--g0);border:1px solid var(--border2);border-radius:20px;padding:2px 10px;">✓ Saved</span>
+            <span class="prog-section-chevron" id="progNotesChevron" style="transform:rotate(180deg)">▾</span>
           </div>
         </div>
-        <div class="task-analytics-body" style="padding:14px 16px;">
-          <div class="ta-donut-wrap" style="width:88px;height:88px;">
-            <svg class="ta-donut-svg" viewBox="0 0 100 100">
-              <circle class="ta-donut-bg" cx="50" cy="50" r="40"/>
-              <circle class="ta-donut-remaining" cx="50" cy="50" r="40" id="progTaRemainingArc"/>
-              <circle class="ta-donut-completed" cx="50" cy="50" r="40" id="progTaCompletedArc"/>
-            </svg>
-            <div class="ta-donut-inner">
-              <div class="ta-donut-pct" id="progTaDPct">0%</div>
-              <div class="ta-donut-lbl">done</div>
-            </div>
-          </div>
-          <div class="ta-stats">
-            <div class="ta-stat-row">
-              <div class="ta-stat-dot" style="background:var(--g3)"></div>
-              <div class="ta-stat-info">
-                <div class="ta-stat-label">Completed</div>
-                <div class="ta-stat-val" id="progTaCompleted">0</div>
-                <div class="ta-stat-bar-wrap"><div class="ta-stat-bar" id="progTaCompletedBar" style="width:0%;background:linear-gradient(90deg,var(--g3),var(--g2))"></div></div>
-              </div>
-            </div>
-            <div class="ta-stat-row">
-              <div class="ta-stat-dot" style="background:#BBDEFB;border:1px solid var(--border2)"></div>
-              <div class="ta-stat-info">
-                <div class="ta-stat-label">Remaining</div>
-                <div class="ta-stat-val" id="progTaRemaining">0</div>
-                <div class="ta-stat-bar-wrap"><div class="ta-stat-bar" id="progTaRemainingBar" style="width:0%;background:#90CAF9"></div></div>
-              </div>
-            </div>
-            <div class="ta-stat-row">
-              <div class="ta-stat-dot" style="background:var(--g2)"></div>
-              <div class="ta-stat-info">
-                <div class="ta-stat-label">Total Tasks</div>
-                <div class="ta-stat-val" id="progTaTotal">0</div>
+        <div class="prog-section-body" id="progNotesSectionBody">
+          <div class="prog-section-body-inner">
+            <div class="prog-notes-body" id="progNotesBody" style="padding:12px 14px 14px">
+              <textarea class="prog-notes-textarea" id="progNotesTextarea"
+                placeholder="Write about your day…"
+                oninput="progNotesOnInput()"
+                style="min-height:100px;font-size:.82rem"></textarea>
+              <div class="prog-notes-footer" style="margin-top:8px">
+                <span class="prog-notes-char-count" id="progNotesCharCount">0 chars</span>
+                <div style="display:flex;gap:8px">
+                  <button class="prog-notes-btn secondary" id="progNotesClearBtn" onclick="progNotesClear()" style="display:none">Clear</button>
+                  <button class="prog-notes-btn primary" id="progNotesSaveBtn" onclick="progNotesSave()">💾 Save</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <!-- Hidden elements kept for JS compat with progTaskBar/progTaskRingFill -->
+      </div>
+
+    </div><!-- /.dash-left-col -->
+
+    <!-- RIGHT COLUMN: Today's Habits + Goals -->
+    <div class="dash-right-col">
+
+      <!-- Today's Habits Card -->
+      <div class="dash-card dash-habits-card" id="dashTodayHabitsCard">
+        <div class="dash-card-head">
+          <div class="dash-card-title">
+            <span class="dash-card-icon">🎯</span>
+            Today's Habits
+            <span class="dash-habits-count-badge" id="dashHabitsCountBadge">0/0</span>
+          </div>
+          <button class="dash-view-btn" onclick="switchView('habitdash')">View All ›</button>
+        </div>
+        <div class="prog-cat-tabs" id="progCatTabs" style="padding:8px 14px 4px"></div>
+        <div id="progHabitList" style="padding-bottom:6px"></div>
         <div style="display:none">
-          <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" id="progTaskRingFill"/></svg>
-          <span id="progTaskPct"></span>
-          <span id="progTaskBadge"></span>
-          <span id="progTaskDoneDetail"></span>
-          <span id="progTaskPendingDetail"></span>
-          <div id="progTaskBar"></div>
+          <div id="progHabitSection"></div>
+          <div id="progHabitSectionBody"></div>
+          <span id="progHabitSectionCount"></span>
+          <span id="progHabitChevron"></span>
         </div>
       </div>
 
-      <!-- Habits card — styled like Task Analytics -->
-      <div class="prog-ring-card" style="padding:0;overflow:hidden;">
-        <div class="task-analytics-head" style="border-bottom:1.5px solid var(--g0);padding:12px 16px 10px;">
-          <div class="task-analytics-title">
-            <span style="width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#7B1FA2,#AB47BC);display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0;box-shadow:0 2px 8px rgba(123,31,162,.25)">🎯</span>
-            Habits
+      <!-- Goals Card -->
+      <div class="dash-card dash-goals-card" id="dashGoalsCard">
+        <div class="dash-card-head">
+          <div class="dash-card-title">
+            <span class="dash-card-icon">🏆</span>
+            Goals
           </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="prog-ring-badge" id="progHabitBadge" style="font-family:'DM Mono',monospace;font-size:.58rem;color:var(--muted);background:var(--g0);border:1px solid var(--border2);border-radius:20px;padding:2px 9px;">0 / 0</span>
-            <button class="prog-goto-btn" onclick="switchView('habitdash')">Open Habit Tracker →</button>
+          <button class="dash-view-btn" onclick="switchView('goals')">View All ›</button>
+        </div>
+        <div class="dash-goals-counts">
+          <div class="dash-goals-count-box dash-goals-count-active">
+            <div class="dash-goals-count-val" id="dashGoalsActiveCount">0</div>
+            <div class="dash-goals-count-lbl">ACTIVE</div>
+          </div>
+          <div class="dash-goals-count-box dash-goals-count-done">
+            <div class="dash-goals-count-val" id="dashGoalsDoneCount">0</div>
+            <div class="dash-goals-count-lbl">DONE</div>
           </div>
         </div>
-        <div class="task-analytics-body" style="padding:14px 16px;">
-          <div class="ta-donut-wrap" style="width:88px;height:88px;">
-            <svg class="ta-donut-svg" viewBox="0 0 100 100">
-              <circle class="ta-donut-bg" cx="50" cy="50" r="40"/>
-              <circle cx="50" cy="50" r="40" fill="none" stroke="#CE93D8" stroke-width="9" stroke-linecap="round" stroke-dasharray="251.33" stroke-dashoffset="251.33" style="transform-origin:center;transform:rotate(-90deg);transition:stroke-dashoffset .8s cubic-bezier(.34,1.2,.64,1)" id="progHabitRingFill"/>
-            </svg>
-            <div class="ta-donut-inner">
-              <div class="ta-donut-pct" id="progHabitPct" style="color:#7B1FA2">0%</div>
-              <div class="ta-donut-lbl">done</div>
-            </div>
-          </div>
-          <div class="ta-stats">
-            <div class="ta-stat-row">
-              <div class="ta-stat-dot" style="background:#AB47BC"></div>
-              <div class="ta-stat-info">
-                <div class="ta-stat-label">Completed</div>
-                <div class="ta-stat-val" id="progHabitDoneDetail2">0</div>
-                <div class="ta-stat-bar-wrap"><div class="ta-stat-bar" id="progHabitBar" style="width:0%;background:linear-gradient(90deg,#7B1FA2,#CE93D8)"></div></div>
-              </div>
-            </div>
-            <div class="ta-stat-row">
-              <div class="ta-stat-dot" style="background:#F3E5F5;border:1px solid #CE93D8"></div>
-              <div class="ta-stat-info">
-                <div class="ta-stat-label">Pending</div>
-                <div class="ta-stat-val" id="progHabitPendingDetail2">0</div>
-                <div class="ta-stat-bar-wrap"><div class="ta-stat-bar" id="progHabitPendingBar" style="width:0%;background:#CE93D8"></div></div>
-              </div>
-            </div>
-            <div class="ta-stat-row">
-              <div class="ta-stat-dot" style="background:#AB47BC"></div>
-              <div class="ta-stat-info">
-                <div class="ta-stat-label">Total Habits</div>
-                <div class="ta-stat-val" id="progHabitTotal2">0</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Hidden stubs for JS compat -->
-        <div style="display:none">
-          <span id="progHabitDoneDetail">0 completed</span>
-          <span id="progHabitPendingDetail">0 pending</span>
-        </div>
+        <div id="progGoalsOverviewBody" style="padding:0 12px 12px"></div>
       </div>
-    </div>
 
-    <!-- ── DESKTOP 2-COLUMN GRID (Habits/Notes/Goals) ── -->
-    <div class="prog-sections-grid">
+    </div><!-- /.dash-right-col -->
 
-    <!-- Hidden stubs for JS compat — progTaskList still needed by renderProgress -->
+    </div><!-- /.dash-main-layout -->
+
+    <!-- Hidden JS compat stubs -->
     <div style="display:none">
-      <div id="progTaskList"></div>
-      <span id="progTaskSectionCount"></span>
-    </div>
-
-    <!-- Hidden stubs so habit-list JS does not throw errors -->
-    <div style="display:none">
-      <div id="progHabitSection"></div>
-      <div id="progHabitSectionBody"></div>
-      <span id="progHabitSectionCount"></span>
-      <span id="progHabitChevron"></span>
-      <div id="progCatTabs"></div>
-      <div id="progHabitList"></div>
-    </div>
-
-    <!-- Daily Notes Section -->
-    <div class="prog-section-card" id="progNotesSection" style="animation-delay:.45s">
-      <div class="prog-section-head" onclick="progToggleSection('notes')" role="button" aria-expanded="false" aria-controls="progNotesSectionBody">
-        <span class="prog-section-title">
-          <span class="prog-section-chevron" id="progNotesChevron">▾</span>
-          📝 Daily Notes / What I Did Today
-        </span>
-        <div style="display:flex;align-items:center;gap:8px" onclick="event.stopPropagation()">
-          <span id="progNotesSavedBadge" style="display:none;font-size:.62rem;color:var(--g3);font-weight:700;background:var(--g0);border:1px solid var(--border2);border-radius:20px;padding:2px 10px;">✓ Saved</span>
+      <div id="progTaskList"></div><span id="progTaskSectionCount"></span>
+      <div id="progStatsGrid">
+        <span id="progTotalDone"></span><span id="progTotalPending"></span>
+        <span id="progTaskDone"></span><span id="progHabitDone"></span>
+      </div>
+      <div class="prog-rings-row">
+        <div class="prog-ring-card">
+          <div id="progTaLiveBadge"></div>
+          <circle id="progTaRemainingArc"/><circle id="progTaCompletedArc"/>
+          <span id="progTaDPct"></span><span id="progTaCompleted"></span>
+          <span id="progTaRemaining"></span><span id="progTaTotal"></span>
+          <div id="progTaCompletedBar"></div><div id="progTaRemainingBar"></div>
+          <circle id="progTaskRingFill"/><span id="progTaskPct"></span>
+          <span id="progTaskBadge"></span><span id="progTaskDoneDetail"></span>
+          <span id="progTaskPendingDetail"></span><div id="progTaskBar"></div>
+        </div>
+        <div class="prog-ring-card">
+          <span id="progHabitBadge"></span><circle id="progHabitRingFill"/>
+          <span id="progHabitPct"></span><span id="progHabitDoneDetail2"></span>
+          <span id="progHabitPendingDetail2"></span><span id="progHabitTotal2"></span>
+          <div id="progHabitBar"></div><div id="progHabitPendingBar"></div>
+          <span id="progHabitDoneDetail"></span><span id="progHabitPendingDetail"></span>
         </div>
       </div>
-      <div class="prog-section-body" id="progNotesSectionBody">
-        <div class="prog-section-body-inner">
-          <div class="prog-notes-body" id="progNotesBody">
-            <textarea class="prog-notes-textarea" id="progNotesTextarea" placeholder="Write about your day… what did you accomplish? How are you feeling? Any reflections?" oninput="progNotesOnInput()"></textarea>
-            <div class="prog-notes-footer">
-              <span class="prog-notes-char-count" id="progNotesCharCount">0 characters</span>
-              <div style="display:flex;gap:8px">
-                <button class="prog-notes-btn secondary" id="progNotesClearBtn" onclick="progNotesClear()" style="display:none">Clear</button>
-                <button class="prog-notes-btn primary" id="progNotesSaveBtn" onclick="progNotesSave()">💾 Save Note</button>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div id="progGoalsSection">
+        <span id="progGoalsChevron"></span>
+        <span id="progGoalsSectionCount"></span>
+        <div id="progGoalsSectionBody"><div class="prog-section-body-inner"></div></div>
       </div>
     </div>
-
-    <!-- Monthly Goals Overview Section -->
-    <div class="prog-section-card" id="progGoalsSection" style="animation-delay:.55s">
-      <div class="prog-section-head" onclick="progToggleSection('goals')" role="button" aria-expanded="false" aria-controls="progGoalsSectionBody">
-        <span class="prog-section-title">
-          <span class="prog-section-chevron" id="progGoalsChevron">▾</span>
-          🏆 Monthly Goals Overview
-        </span>
-        <div style="display:flex;align-items:center;gap:8px" onclick="event.stopPropagation()">
-          <span class="prog-section-count" id="progGoalsSectionCount"></span>
-          <button class="prog-goto-btn" onclick="switchView('goals')">Open Goals →</button>
-        </div>
-      </div>
-      <div class="prog-section-body" id="progGoalsSectionBody">
-        <div class="prog-section-body-inner">
-          <div id="progGoalsOverviewBody" style="padding:16px 18px"></div>
-        </div>
-      </div>
-    </div>
-
-    </div><!-- /.prog-sections-grid -->
 
     <!-- ── AI DAILY DEBRIEF ── -->
     <div class="ai-debrief-card" id="aiDebriefCard">
@@ -6660,26 +7288,162 @@ input[type="text"]:focus, textarea:focus, select:focus {
 
 <!-- ═══════════════ DAILY PLANNER VIEW ═══════════════ -->
 <div class="view" id="view-planner">
-  <div class="page-wrap">
-    <div class="planner-layout">
+  <div class="page-wrap pv2-page">
 
-      <!-- ── MAIN COLUMN ── -->
-      <div class="planner-main">
-        <!-- Nav -->
-        <div class="planner-nav">
-          <div style="flex:1">
-            <h2 class="planner-date-title" id="plannerDateTitle"></h2>
-            <span class="planner-date-sub" id="plannerDateSub"></span>
-            <span class="planner-sync-badge" id="plannerSyncBadge" style="margin-top:4px;display:none">
-              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M9.5 5.5A4 4 0 115.5 1.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M7.5 1l2 .5-.5 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Synced to cloud
-            </span>
+    <!-- ══ NEW PLANNER NAV ══ -->
+    <div class="pv2-nav">
+      <button class="pv2-arrow-btn" onclick="pv2NavDay(-1)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div class="pv2-nav-center">
+        <div class="pv2-date-label" id="plannerDateTitle">Today</div>
+        <div class="pv2-date-sub" id="plannerDateSub"></div>
+      </div>
+      <button class="pv2-today-btn" onclick="pv2NavToday()">Today</button>
+      <button class="pv2-arrow-btn" onclick="pv2NavDay(1)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <!-- ══ PROGRESS BAR ══ -->
+    <div class="pv2-progress-wrap">
+      <div class="pv2-progress-bar" id="pv2ProgressBar" style="width:0%"></div>
+      <div class="pv2-progress-label" id="pv2ProgressLabel">0/0</div>
+    </div>
+
+    <!-- ══ MAIN TWO-COLUMN LAYOUT ══ -->
+    <div class="pv2-layout">
+
+      <!-- LEFT COLUMN -->
+      <div class="pv2-main">
+
+        <!-- Add Task Card -->
+        <div class="pv2-add-card">
+          <div class="pv2-add-row1">
+            <input class="pv2-add-input" id="pv2TaskInput" placeholder="Add a task…"
+              onkeydown="if(event.key==='Enter')pv2AddTask()"/>
+            <button class="pv2-add-btn" onclick="pv2AddTask()">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            </button>
           </div>
-          <button class="nav-btn today-btn" onclick="plannerGoToday()">Today</button>
-          <button class="nav-btn" onclick="plannerChangeDay(-1)">‹</button>
-          <button class="nav-btn" onclick="plannerChangeDay(1)">›</button>
+          <div class="pv2-add-row2">
+            <!-- Custom category dropdown -->
+            <div class="pv2-drop-wrap" onclick="pv2ToggleDropdown(event)">
+              <span class="pv2-cat-dot" id="pv2CatDot" style="background:#8EA7C7"></span>
+              <span class="pv2-cat-label" id="pv2CatLabel">None</span>
+              <svg class="pv2-drop-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <input type="hidden" id="pv2CategoryValue" value="none"/>
+              <div class="pv2-drop-menu" id="pv2DropMenu" style="display:none" onclick="event.stopPropagation()">
+                <div class="pv2-drop-opt" data-val="do" onclick="pv2SelectCat('do')">
+                  <span class="pv2-drop-dot" style="background:#43a047"></span>Do
+                </div>
+                <div class="pv2-drop-opt" data-val="schedule" onclick="pv2SelectCat('schedule')">
+                  <span class="pv2-drop-dot" style="background:#1976d2"></span>Schedule
+                </div>
+                <div class="pv2-drop-opt" data-val="delegate" onclick="pv2SelectCat('delegate')">
+                  <span class="pv2-drop-dot" style="background:#f9a825"></span>Delegate
+                </div>
+                <div class="pv2-drop-opt" data-val="eliminate" onclick="pv2SelectCat('eliminate')">
+                  <span class="pv2-drop-dot" style="background:#e53935"></span>Eliminate
+                </div>
+                <div class="pv2-drop-opt selected" data-val="none" onclick="pv2SelectCat('none')">
+                  None
+                  <svg class="pv2-drop-check" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--g4)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+            </div>
+            <input class="pv2-time-input" id="pv2TimeInput" type="time" />
+          </div>
         </div>
 
+        <!-- TOP 3 FOCUS TASKS (shown only when tasks are starred) -->
+        <div class="pv2-top3-card" id="pv2Top3Section" style="display:none">
+          <div class="pv2-top3-header">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='10' r='10' fill='%23E53935'/%3E%3Ctext x='10' y='14' text-anchor='middle' font-size='12' fill='white'%3E🎯%3C/text%3E%3C/svg%3E" width="20" height="20" style="border-radius:50%" alt=""/>
+            TOP 3 FOCUS TASKS
+          </div>
+          <div id="pv2Top3Grid"></div>
+        </div>
+
+        <!-- All Tasks List -->
+        <div class="pv2-tasks-card">
+          <div class="pv2-tasks-header">
+            <div class="pv2-tasks-header-left">
+              <svg width="16" height="14" viewBox="0 0 16 14" fill="none"><rect y="0" width="16" height="2" rx="1" fill="currentColor"/><rect y="6" width="11" height="2" rx="1" fill="currentColor"/><rect y="12" width="13" height="2" rx="1" fill="currentColor"/></svg>
+              ALL TASKS
+            </div>
+            <span class="pv2-task-count" id="pv2TaskCount">0 tasks</span>
+          </div>
+          <div class="pv2-task-list" id="pv2TaskList">
+            <div class="pv2-empty">
+              <div class="pv2-empty-icon">📋</div>
+              <div class="pv2-empty-text">No tasks yet — add one above</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /.pv2-main -->
+
+      <!-- RIGHT SIDEBAR — Priority Matrix -->
+      <div class="pv2-sidebar">
+        <div class="pv2-matrix-card">
+          <div class="pv2-matrix-header">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1l1.5 4H13l-3.6 2.6 1.4 4.3L7 9.5 3.2 11.9l1.4-4.3L1 5h4.5z" fill="#f9a825"/></svg>
+            PRIORITY MATRIX
+          </div>
+          <div class="pv2-quadrant pv2-q-do">
+            <div class="pv2-q-head">
+              <span class="pv2-q-dot" style="background:#43a047"></span>
+              <span class="pv2-q-label">DO</span>
+            </div>
+            <div class="pv2-q-tasks" id="pv2QDo"><span class="pv2-q-empty">No tasks</span></div>
+          </div>
+          <div class="pv2-quadrant pv2-q-schedule">
+            <div class="pv2-q-head">
+              <span class="pv2-q-dot" style="background:#1976d2"></span>
+              <span class="pv2-q-label">SCHEDULE</span>
+            </div>
+            <div class="pv2-q-tasks" id="pv2QSchedule"><span class="pv2-q-empty">No tasks</span></div>
+          </div>
+          <div class="pv2-quadrant pv2-q-delegate">
+            <div class="pv2-q-head">
+              <span class="pv2-q-dot" style="background:#f9a825"></span>
+              <span class="pv2-q-label">DELEGATE</span>
+            </div>
+            <div class="pv2-q-tasks" id="pv2QDelegate"><span class="pv2-q-empty">No tasks</span></div>
+          </div>
+          <div class="pv2-quadrant pv2-q-eliminate">
+            <div class="pv2-q-head">
+              <span class="pv2-q-dot" style="background:#e53935"></span>
+              <span class="pv2-q-label">ELIMINATE</span>
+            </div>
+            <div class="pv2-q-tasks" id="pv2QEliminate"><span class="pv2-q-empty">No tasks</span></div>
+          </div>
+        </div>
+      </div><!-- /.pv2-sidebar -->
+
+    </div><!-- /.pv2-layout -->
+
+    <!-- Hidden legacy planner elements (kept for JS compatibility) -->
+    <div style="display:none">
+      <span id="plannerSyncBadge"></span>
+      <div id="plannerItemCount"></div>
+      <div id="plannerTimeline"></div>
+      <div id="plannerWeekmap"></div>
+      <div id="pstatTotal"></div><div id="pstatDone"></div>
+      <div id="plannerRingPct"></div><svg><circle id="plannerRingFill"/></svg>
+      <div id="plannerProgressMeta"></div>
+    </div>
+
+  </div><!-- /.pv2-page -->
+
+  <!-- ══ LEGACY PLANNER SECTIONS (hidden, keep JS running) ══ -->
+  <div style="display:none">
+    <div class="planner-layout">
+      <div class="planner-main">
+        <div class="planner-nav">
+          <div style="flex:1"><h2 id="_legacyPlannerDateTitle"></h2><span id="_legacyPlannerDateSub"></span></div>
+        </div>
         <!-- ══ TASK ANALYTICS CARD ══ -->
         <div class="task-analytics-card" id="taskAnalyticsCard">
           <div class="task-analytics-head">
@@ -6944,7 +7708,7 @@ input[type="text"]:focus, textarea:focus, select:focus {
               </div>
 
               <!-- Timeline Body -->
-              <div class="timeline-body" id="plannerTimeline" style="padding:8px 0"></div>
+              <div class="timeline-body" id="plannerTimelineLegacy" style="padding:8px 0"></div>
             </div>
           </div>
         </div>
@@ -6957,15 +7721,18 @@ input[type="text"]:focus, textarea:focus, select:focus {
         <!-- Week Minimap -->
         <div class="planner-weekmap">
           <div class="pwm-title">This Week</div>
-          <div class="pwm-days" id="plannerWeekmap"></div>
+          <div class="pwm-days" id="plannerWeekmap_legacy"></div>
         </div>
 
         <!-- Progress Ring and Stats removed -->
 
       </div><!-- /.planner-side -->
     </div><!-- /.planner-layout -->
-  </div>
-</div>
+    </div><!-- /.planner-main (legacy) -->
+    </div><!-- /.planner-layout (legacy wrapper) -->
+  </div><!-- close legacy hidden div -->
+
+</div><!-- /#view-planner -->
 
 <!-- Move-to-quadrant dropdown (shared) -->
 <div class="mq-move-dropdown" id="mqMoveDropdown" style="display:none">
@@ -7466,6 +8233,25 @@ async function loadFromFirestore(uid) {
           localStorage.setItem('dream_top3_' + tk2, JSON.stringify(td.top3));
         } catch {}
       }
+      // ── pv2Tasks: restore planner tasks from cloud for cross-device sync ──
+      if (td.pv2Tasks && typeof td.pv2Tasks === 'object' && Object.keys(td.pv2Tasks).length > 0) {
+        try {
+          const localRaw = localStorage.getItem('ht_pv2_tasks');
+          const localStore = localRaw ? JSON.parse(localRaw) : {};
+          // Merge: for each date key, union tasks by id (local wins for conflicts)
+          const merged = Object.assign({}, td.pv2Tasks);
+          Object.keys(localStore).forEach(dk => {
+            if (!merged[dk]) { merged[dk] = localStore[dk]; return; }
+            const cloudById = {};
+            (merged[dk] || []).forEach(t => { if (t.id) cloudById[t.id] = t; });
+            (localStore[dk] || []).forEach(t => { if (t.id) cloudById[t.id] = t; }); // local wins
+            merged[dk] = Object.values(cloudById);
+          });
+          localStorage.setItem('ht_pv2_tasks', JSON.stringify(merged));
+          // Re-render pv2 with fresh data
+          if (typeof window.pv2Render === 'function') setTimeout(window.pv2Render, 200);
+        } catch(e2) { console.warn('pv2Tasks restore error:', e2); }
+      }
     } else {
       // First time: push local data up to cloud
       try { await _syncLocalOnlyDataToCloud(uid, db, doc, setDoc, serverTimestamp); } catch {}
@@ -7665,6 +8451,9 @@ async function _syncLocalOnlyDataToCloud(uid, db, docFn, setDocFn, serverTimesta
     const activeMqDateKey = typeof window._mqGetCurrentDateKey === 'function'
       ? window._mqGetCurrentDateKey() : todayKey2;
 
+    let pv2TasksInit = {};
+    try { pv2TasksInit = JSON.parse(localStorage.getItem('ht_pv2_tasks') || '{}'); } catch(e2) {}
+
     const payload = {
       brainDumpByDate: brainDumpByDate, // per-date map (new format)
       brainDump:    bdRaw  ? JSON.parse(bdRaw)  : [],
@@ -7672,6 +8461,7 @@ async function _syncLocalOnlyDataToCloud(uid, db, docFn, setDocFn, serverTimesta
       matrix:       matrixByDate[activeMqDateKey] || {},
       top3ByDate:   top3ByDate,
       top3:         top3ByDate[activeDateKey] || [null,null,null],
+      pv2Tasks:     pv2TasksInit,
       updatedAt:    serverTimestampFn(),
       savedAt:      Date.now()
     };
@@ -7762,6 +8552,9 @@ window._taskDataCloudSave = function() {
       }
 
       window._taskDataLastSavedAt = Date.now();
+      // ── Include pv2 tasks for cross-device persistence ──
+      let pv2TasksData = {};
+      try { pv2TasksData = JSON.parse(localStorage.getItem('ht_pv2_tasks') || '{}'); } catch(e2) {}
       await setDoc(doc(db, 'users', uid, 'config', 'taskData'), {
         brainDumpByDate: brainDumpByDate, // per-date map (new format)
         brainDump:     bdRaw ? JSON.parse(bdRaw) : [], // legacy compat (today's flat list)
@@ -7769,6 +8562,7 @@ window._taskDataCloudSave = function() {
         matrix:        matrixByDate[activeMqDateKey] || {}, // today's matrix (legacy compat)
         top3ByDate:    top3ByDate,     // per-date map (new format)
         top3:          top3ByDate[activeDateKey] || [null,null,null], // today's slots (legacy compat)
+        pv2Tasks:      pv2TasksData,   // pv2 planner tasks (cross-device)
         updatedAt:     serverTimestamp(),
         savedAt:       Date.now()
       });
@@ -7906,6 +8700,27 @@ function _setupTaskDataListener(uid) {
         if (typeof window._top3Render === 'function') window._top3Render();
         if (typeof window._renderProgTop3 === 'function') window._renderProgTop3();
       } catch(e) {}
+    }
+
+    // ── Apply pv2Tasks (cross-device planner task sync) ──
+    if (d.pv2Tasks && typeof d.pv2Tasks === 'object' && Object.keys(d.pv2Tasks).length > 0) {
+      try {
+        const localRaw   = localStorage.getItem('ht_pv2_tasks');
+        const localStore = localRaw ? JSON.parse(localRaw) : {};
+        // Merge by date-key then by task id; cloud wins for existing tasks, local additions kept
+        const merged = Object.assign({}, localStore);
+        Object.keys(d.pv2Tasks).forEach(dk => {
+          const cloudTasks = Array.isArray(d.pv2Tasks[dk]) ? d.pv2Tasks[dk] : [];
+          const localTasks = Array.isArray(localStore[dk]) ? localStore[dk] : [];
+          const byId = {};
+          cloudTasks.forEach(t => { if (t && t.id) byId[t.id] = t; });
+          localTasks.forEach(t => { if (t && t.id && !byId[t.id]) byId[t.id] = t; }); // local-only additions
+          merged[dk] = Object.values(byId);
+        });
+        localStorage.setItem('ht_pv2_tasks', JSON.stringify(merged));
+        // Re-render the pv2 planner with fresh data
+        if (typeof window.pv2Render === 'function') window.pv2Render();
+      } catch(e) { console.warn('pv2Tasks live apply error:', e); }
     }
 
     // ── After any cloud sync: update Task Analytics + Progress KPIs ──
@@ -8888,7 +9703,7 @@ window.switchView = (v)=>{
   if(v==='weekly')     renderWeekly();
   if(v==='planner')    renderPlanner();
   if(v==='habitdash')  renderHabitDash();
-  if(v==='progress')   renderProgress();
+  if(v==='progress')   { renderProgress(); _dashAutoOpenSections(); }
   if(v==='goals')      renderGoals();
   if(v==='coach')      initCoachView();
 };
@@ -10816,6 +11631,23 @@ function animateRing(elId, pct, circ) {
 
 function setEl(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
 
+// Auto-open notes section on dashboard load
+function _dashAutoOpenSections() {
+  // Open notes section if not already open
+  if (typeof progNotesExpanded !== 'undefined' && !progNotesExpanded) {
+    const notesCard = document.getElementById('progNotesSection');
+    if (notesCard) {
+      progNotesExpanded = true;
+      notesCard.classList.add('is-expanded');
+      const chevron = document.getElementById('progNotesChevron');
+      if (chevron) chevron.style.transform = 'rotate(180deg)';
+      const head = notesCard.querySelector('.prog-section-head');
+      if (head) head.setAttribute('aria-expanded', 'true');
+      if (typeof progNotesLoad === 'function') progNotesLoad();
+    }
+  }
+}
+
 function renderProgress() {
   const d = progSelectedDate;
   // Keep window.progSelectedDate in sync so IIFEs (focus sessions, top3) read correct date
@@ -11055,6 +11887,74 @@ function renderProgress() {
   } else if (typeof window._renderProgTop3 === 'function') {
     window._renderProgTop3();
   }
+
+  // ── Update new Dashboard hero banner ──
+  (function updateDashboardUI() {
+    // Date label in hero
+    const DAY_FULL = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const MON_FULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const heroDateEl = document.getElementById('dashHeroDate');
+    if (heroDateEl) {
+      heroDateEl.textContent = DAY_FULL[d.getDay()].toUpperCase() + ', ' + MON_FULL[d.getMonth()].toUpperCase() + ' ' + d.getDate();
+    }
+    // Percentage
+    setEl('dashHeroPct', overallPct + '%');
+    // Progress bar
+    const pb = document.getElementById('dashHeroProgressFill');
+    if (pb) setTimeout(() => { pb.style.width = overallPct + '%'; }, 50);
+    // Message
+    const msgEl = document.getElementById('dashHeroMsg');
+    if (msgEl) {
+      if (totalDone === 0) msgEl.textContent = '🚀 Time to get started — your goals are waiting!';
+      else msgEl.textContent = '🚀 Great start! ' + totalDone + ' down, keep building!';
+    }
+    // Habit count
+    setEl('dashHeroHabitCount', habitDone + '/' + habitTotal + ' habits');
+    // Mini stat cards
+    setEl('dashStatHabitsDone', habitDone + '/' + habitTotal);
+    const habBar = document.getElementById('dashStatHabitsBar');
+    if (habBar) setTimeout(() => { habBar.style.width = habitPct + '%'; }, 60);
+    // Day score (overall %)
+    setEl('dashStatDayScore', overallPct + '%');
+    const scoreBar = document.getElementById('dashStatScoreBar');
+    if (scoreBar) setTimeout(() => { scoreBar.style.width = overallPct + '%'; }, 60);
+    // Goals active count
+    try {
+      const goalsRaw = localStorage.getItem('dream_goals');
+      const allGoals = goalsRaw ? JSON.parse(goalsRaw) : [];
+      const activeGoals = allGoals.filter(g => g.status !== 'done' && g.status !== 'completed');
+      const doneGoals = allGoals.filter(g => g.status === 'done' || g.status === 'completed');
+      setEl('dashStatGoalsActive', activeGoals.length);
+      setEl('dashGoalsActiveCount', activeGoals.length);
+      setEl('dashGoalsDoneCount', doneGoals.length);
+      const goalsBar = document.getElementById('dashStatGoalsBar');
+      const goalsPct = allGoals.length ? Math.round(doneGoals.length / allGoals.length * 100) : 0;
+      if (goalsBar) setTimeout(() => { goalsBar.style.width = goalsPct + '%'; }, 60);
+    } catch(e) {}
+    // Always render goals overview in the new card
+    if (typeof renderProgGoalsOverview === 'function') {
+      window.progGoalsExpanded = true;
+      setTimeout(renderProgGoalsOverview, 80);
+    }
+    // Focus time from FT state
+    try {
+      const ftData = localStorage.getItem('dream_focus_sessions');
+      if (ftData) {
+        const sessions = JSON.parse(ftData);
+        const todayKey = plannerDateKey(d);
+        const todaySessions = sessions.filter ? sessions.filter(s => s.date === todayKey) : [];
+        const totalSecs = todaySessions.reduce((acc, s) => acc + (s.duration || 0), 0);
+        const hrs = Math.floor(totalSecs / 3600);
+        const mins = Math.floor((totalSecs % 3600) / 60);
+        setEl('dashStatFocusTime', hrs > 0 ? hrs + 'h ' + mins + 'm' : mins + 'm');
+        const focusBar = document.getElementById('dashStatFocusBar');
+        if (focusBar) { const fpct = Math.min(100, Math.round(totalSecs / (8*3600) * 100)); setTimeout(() => { focusBar.style.width = fpct + '%'; }, 60); }
+      }
+    } catch(e) {}
+    // Update habit count badge in card header
+    const hcb = document.getElementById('dashHabitsCountBadge');
+    if (hcb) hcb.textContent = habitDone + '/' + habitTotal;
+  })();
 }
 
 // ── Progress tab: toggle a task (syncs with Planner) ──
@@ -16606,6 +17506,9 @@ function dfmRefreshGoalBadge() {
   } else {
     badge.style.display = 'none';
   }
+  // Also update the new ft-goal-row badge
+  const ftBadgeText = document.getElementById('ftGoalBadgeText');
+  if (ftBadgeText) ftBadgeText.textContent = goal || 'Set session goal…';
 }
 
 /* Open goal modal (for first-time or editing) */
@@ -18264,6 +19167,462 @@ window._goalNotesAfterLogin = function(db, getDoc, doc, setDoc, serverTimestamp,
 
   // Initial ring render
   medUpdateRing();
+
+})();
+</script>
+
+<!-- ══════════════════════════════════════════════
+     NEW PLANNER VIEW v2 — JavaScript
+══════════════════════════════════════════════ -->
+<script>
+(function() {
+  'use strict';
+
+  // ── Storage ──
+  const LS_KEY = 'ht_pv2_tasks';
+  let store = {};
+
+  // ── Category config ──
+  const CAT_META = {
+    none:     { color: '#8EA7C7', label: null,       dot: '#8EA7C7' },
+    do:       { color: '#43a047', label: 'do',       dot: '#43a047' },
+    schedule: { color: '#1976d2', label: 'schedule',  dot: '#1976d2' },
+    delegate: { color: '#f9a825', label: 'delegate',  dot: '#f9a825' },
+    eliminate:{ color: '#e53935', label: 'eliminate', dot: '#e53935' },
+  };
+
+  // ── pv2 owns its own selected date — does NOT depend on plannerSelectedDate ──
+  var _pv2Date = new Date();
+  _pv2Date.setHours(0, 0, 0, 0);
+
+  function getCurKey() {
+    var d = _pv2Date;
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  // Keep window.plannerSelectedDate in sync so other modules (Brain Dump, etc.) work
+  function syncSharedDate() {
+    window.plannerSelectedDate = new Date(_pv2Date);
+  }
+
+  // ── Navigate day: delta = -1 or +1 ──
+  window.pv2NavDay = function(delta) {
+    _pv2Date = new Date(_pv2Date);
+    _pv2Date.setDate(_pv2Date.getDate() + delta);
+    _pv2Date.setHours(0, 0, 0, 0);
+    syncSharedDate();
+    var key = getCurKey();
+    // Notify other modules
+    if (typeof window._bdLoadForDate === 'function') window._bdLoadForDate(key);
+    if (typeof window._mqLoadForDate === 'function') window._mqLoadForDate(key);
+    if (typeof window._top3LoadForDate === 'function') window._top3LoadForDate(key);
+    // Also call the original plannerChangeDay render if available (keeps old planner UI in sync)
+    if (typeof window._origPlannerChangeDay === 'function') {
+      try { window.plannerSelectedDate = new Date(_pv2Date); window._origPlannerChangeDay(delta); } catch(e) {}
+    }
+    load();
+    pv2Render();
+  };
+
+  // ── Navigate to today ──
+  window.pv2NavToday = function() {
+    _pv2Date = new Date();
+    _pv2Date.setHours(0, 0, 0, 0);
+    syncSharedDate();
+    var key = getCurKey();
+    if (typeof window._bdLoadForDate === 'function') window._bdLoadForDate(key);
+    if (typeof window._mqLoadForDate === 'function') window._mqLoadForDate(key);
+    if (typeof window._top3LoadForDate === 'function') window._top3LoadForDate(key);
+    if (typeof window._origPlannerGoToday === 'function') {
+      try { window._origPlannerGoToday(); } catch(e) {}
+    }
+    load();
+    pv2Render();
+  };
+
+  // ── Persistence ──
+  function save() {
+    try { localStorage.setItem(LS_KEY, JSON.stringify(store)); } catch(e) {}
+    // Trigger cloud sync so pv2 tasks are persisted across devices
+    if (typeof window._taskDataCloudSave === 'function') window._taskDataCloudSave();
+  }
+  function load() { try { const r = localStorage.getItem(LS_KEY); if (r) store = JSON.parse(r); } catch(e){ store={}; } }
+  function tasksForKey(key) { if (!store[key]) store[key] = []; return store[key]; }
+
+  // ── UUID ──
+  function uuid() { return 'pv2-' + Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
+
+  // ── Escape HTML ──
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  // ──────────────────────────────────────────────
+  //  CUSTOM DROPDOWN (matches screenshot 4)
+  // ──────────────────────────────────────────────
+  let dropdownOpen = false;
+
+  window.pv2ToggleDropdown = function(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('pv2DropMenu');
+    if (!menu) return;
+    dropdownOpen = !dropdownOpen;
+    menu.style.display = dropdownOpen ? 'block' : 'none';
+  };
+
+  window.pv2SelectCat = function(val) {
+    const meta = CAT_META[val] || CAT_META.none;
+    const dot  = document.getElementById('pv2CatDot');
+    const lbl  = document.getElementById('pv2CatLabel');
+    const inp  = document.getElementById('pv2CategoryValue');
+    const menu = document.getElementById('pv2DropMenu');
+    // Update checkmark
+    document.querySelectorAll('.pv2-drop-opt').forEach(o => o.classList.remove('selected'));
+    const chosen = document.querySelector(`.pv2-drop-opt[data-val="${val}"]`);
+    if (chosen) chosen.classList.add('selected');
+    if (dot) dot.style.background = meta.dot;
+    if (lbl) lbl.textContent = val === 'none' ? 'None' : val.charAt(0).toUpperCase() + val.slice(1);
+    if (inp) inp.value = val;
+    if (menu) menu.style.display = 'none';
+    dropdownOpen = false;
+  };
+
+  // Close dropdown on outside click
+  document.addEventListener('click', function() {
+    const menu = document.getElementById('pv2DropMenu');
+    if (menu) menu.style.display = 'none';
+    dropdownOpen = false;
+  });
+
+  // ──────────────────────────────────────────────
+  //  ADD TASK — with duplicate check
+  // ──────────────────────────────────────────────
+  window.pv2AddTask = function() {
+    const input   = document.getElementById('pv2TaskInput');
+    const catInp  = document.getElementById('pv2CategoryValue');
+    const timeEl  = document.getElementById('pv2TimeInput');
+    if (!input) return;
+
+    const name = input.value.trim();
+    if (!name) { input.focus(); return; }
+
+    const key   = getCurKey();
+    const tasks = tasksForKey(key);
+
+    // ── Duplicate check (case-insensitive) ──
+    const isDuplicate = tasks.some(t => t.name.toLowerCase() === name.toLowerCase());
+    if (isDuplicate) {
+      if (typeof showToast === 'function') showToast('⚠️ Task "' + name + '" already exists!');
+      input.select();
+      return;
+    }
+
+    const category = (catInp ? catInp.value : 'none') || 'none';
+    tasks.push({
+      id:       uuid(),
+      name,
+      category,
+      time:     timeEl ? timeEl.value : '',
+      done:     false,
+      starred:  false,
+    });
+
+    input.value = '';
+    save();
+    pv2Render();
+    if (typeof showToast === 'function') showToast('✅ Task added!');
+  };
+
+  // ──────────────────────────────────────────────
+  //  TOGGLE DONE
+  // ──────────────────────────────────────────────
+  window.pv2ToggleDone = function(key, id) {
+    const t = tasksForKey(key).find(x => x.id === id);
+    if (!t) return;
+    t.done = !t.done;
+    save();
+    pv2Render();
+    syncTop3ForTask(t, key);
+  };
+
+  // ──────────────────────────────────────────────
+  //  TOGGLE STAR — adds/removes from Top 3
+  // ──────────────────────────────────────────────
+  window.pv2ToggleStar = function(key, id) {
+    const tasks = tasksForKey(key);
+    const t = tasks.find(x => x.id === id);
+    if (!t) return;
+
+    if (!t.starred) {
+      // Check Top 3 capacity
+      const starredCount = tasks.filter(x => x.starred).length;
+      if (starredCount >= 3) {
+        if (typeof showToast === 'function') showToast('⚠️ Top 3 is full — unstar another task first');
+        return;
+      }
+      t.starred = true;
+      // Add to global Top 3 system
+      if (typeof window.top3Add === 'function') {
+        window.top3Add(t.name, 'pv2', t.id);
+      }
+      if (typeof showToast === 'function') showToast('⭐ Added to Top 3 Focus!');
+    } else {
+      t.starred = false;
+      // Remove from global Top 3 system
+      if (typeof window.top3RemoveBySource === 'function') {
+        window.top3RemoveBySource('pv2', t.id);
+      }
+    }
+
+    save();
+    pv2Render();
+    // Refresh progress tab if visible
+    if (typeof window._renderProgTop3 === 'function') window._renderProgTop3();
+  };
+
+  // ──────────────────────────────────────────────
+  //  DELETE TASK
+  // ──────────────────────────────────────────────
+  window.pv2DeleteTask = function(key, id) {
+    const tasks = tasksForKey(key);
+    const t = tasks.find(x => x.id === id);
+    // If starred, remove from Top 3 first
+    if (t && t.starred && typeof window.top3RemoveBySource === 'function') {
+      window.top3RemoveBySource('pv2', id);
+    }
+    store[key] = tasks.filter(x => x.id !== id);
+    if (!store[key].length) delete store[key];
+    save();
+    pv2Render();
+    if (typeof showToast === 'function') showToast('Task removed');
+  };
+
+  // ── Sync completion state to global Top3 ──
+  function syncTop3ForTask(t, key) {
+    if (t.starred && typeof window._syncTaskCompletion === 'function') {
+      window._syncTaskCompletion('pv2', t.id, t.done, t.name);
+    }
+    if (typeof window._renderProgTop3 === 'function') window._renderProgTop3();
+  }
+
+  // ──────────────────────────────────────────────
+  //  RENDER HEADER
+  // ──────────────────────────────────────────────
+  function renderHeader() {
+    const d = _pv2Date;
+    const normalize = (x) => { const dd=new Date(x); dd.setHours(0,0,0,0); return dd.getTime(); };
+    const todayTs    = normalize(new Date());
+    const selTs      = normalize(d);
+    const isToday    = selTs === todayTs;
+    const isTomorrow = selTs === todayTs + 86400000;
+    const isYesterday= selTs === todayTs - 86400000;
+
+    const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const DAYS   = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const dateStr = DAYS[d.getDay()] + ', ' + MONTHS[d.getMonth()] + ' ' + d.getDate();
+
+    let label = dateStr;
+    if (isToday)     label = 'Today';
+    if (isTomorrow)  label = 'Tomorrow';
+    if (isYesterday) label = 'Yesterday';
+
+    const titleEl = document.getElementById('plannerDateTitle');
+    const subEl   = document.getElementById('plannerDateSub');
+    if (titleEl) titleEl.textContent = label;
+    if (subEl)   subEl.textContent   = (label === dateStr) ? '' : dateStr;
+
+    // Style Today button
+    const todayBtn = document.querySelector('.pv2-today-btn');
+    if (todayBtn) {
+      todayBtn.style.background    = isToday ? 'var(--g4)' : 'var(--white)';
+      todayBtn.style.color         = isToday ? '#BBDEFB'    : 'var(--text)';
+      todayBtn.style.border        = isToday ? 'none'       : '1.5px solid var(--border)';
+    }
+  }
+
+  // ──────────────────────────────────────────────
+  //  RENDER PROGRESS BAR
+  // ──────────────────────────────────────────────
+  function renderProgressBar(tasks) {
+    const total = tasks.length;
+    const done  = tasks.filter(t => t.done).length;
+    const pct   = total ? Math.round(done / total * 100) : 0;
+    const bar   = document.getElementById('pv2ProgressBar');
+    const lbl   = document.getElementById('pv2ProgressLabel');
+    if (bar) bar.style.width = pct + '%';
+    if (lbl) lbl.textContent = done + '/' + total;
+  }
+
+  // ──────────────────────────────────────────────
+  //  RENDER TOP 3 SECTION (in planner)
+  // ──────────────────────────────────────────────
+  function renderTop3Section(tasks) {
+    const section = document.getElementById('pv2Top3Section');
+    const grid    = document.getElementById('pv2Top3Grid');
+    if (!section || !grid) return;
+
+    const starred = tasks.filter(t => t.starred);
+    if (!starred.length) {
+      section.style.display = 'none';
+      return;
+    }
+    section.style.display = 'block';
+
+    grid.innerHTML = starred.map((t, i) => `
+      <div class="pv2-top3-row ${t.done ? 'done' : ''}">
+        <span class="pv2-top3-num">${i + 1}</span>
+        <div class="pv2-top3-check ${t.done ? 'checked' : ''}" onclick="pv2ToggleDone('${esc(getCurKey())}','${esc(t.id)}')"></div>
+        <span class="pv2-top3-name">${esc(t.name)}</span>
+      </div>`).join('');
+  }
+
+  // ──────────────────────────────────────────────
+  //  RENDER ALL TASKS LIST
+  // ──────────────────────────────────────────────
+  function renderTaskList(key, tasks) {
+    const list  = document.getElementById('pv2TaskList');
+    const count = document.getElementById('pv2TaskCount');
+    if (!list) return;
+    if (count) count.textContent = tasks.length + ' task' + (tasks.length !== 1 ? 's' : '');
+
+    if (!tasks.length) {
+      list.innerHTML = `
+        <div class="pv2-empty">
+          <div class="pv2-empty-icon">🧠</div>
+          <div class="pv2-empty-text">No tasks yet. Add one above!</div>
+        </div>`;
+      return;
+    }
+
+    list.innerHTML = tasks.map(t => {
+      const cat     = t.category || 'none';
+      const meta    = CAT_META[cat] || CAT_META.none;
+      const timeBadge = t.time ? `<span class="pv2-task-time">${esc(t.time)}</span>` : '';
+      const catPill   = (cat !== 'none') ? `<span class="pv2-task-cat-pill cat-${cat}">${meta.label}</span>` : '';
+      const starFilled = t.starred ? '★' : '☆';
+      return `
+        <div class="pv2-task-row ${t.done ? 'done' : ''}">
+          <div class="pv2-task-check ${t.done ? 'checked' : ''}" onclick="pv2ToggleDone('${esc(key)}','${esc(t.id)}')"></div>
+          <div class="pv2-task-body">
+            <span class="pv2-task-name">${esc(t.name)}</span>
+          </div>
+          <div class="pv2-task-actions">
+            ${timeBadge}
+            ${catPill}
+            <button class="pv2-task-star ${t.starred ? 'starred' : ''}" onclick="pv2ToggleStar('${esc(key)}','${esc(t.id)}')" title="${t.starred ? 'Remove from Top 3' : 'Add to Top 3'}">${starFilled}</button>
+            <button class="pv2-task-del" onclick="pv2DeleteTask('${esc(key)}','${esc(t.id)}')" title="Delete">🗑</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  // ──────────────────────────────────────────────
+  //  RENDER PRIORITY MATRIX SIDEBAR
+  // ──────────────────────────────────────────────
+  function renderMatrix(tasks) {
+    const quads = { do: [], schedule: [], delegate: [], eliminate: [] };
+    tasks.forEach(t => {
+      const q = t.category;
+      if (q && quads[q]) quads[q].push(t);
+    });
+    const idMap = { do:'pv2QDo', schedule:'pv2QSchedule', delegate:'pv2QDelegate', eliminate:'pv2QEliminate' };
+    Object.keys(idMap).forEach(q => {
+      const el = document.getElementById(idMap[q]);
+      if (!el) return;
+      el.innerHTML = quads[q].length
+        ? quads[q].map(t => `<div class="pv2-q-task-name ${t.done?'done-q':''}">${esc(t.name)}</div>`).join('')
+        : '<span class="pv2-q-empty">No tasks</span>';
+    });
+  }
+
+  // ──────────────────────────────────────────────
+  //  SYNC STARRED TASKS → PROGRESS TAB TOP 3
+  // ──────────────────────────────────────────────
+  function syncProgressTop3(tasks) {
+    const key     = getCurKey();
+    const starred = tasks.filter(t => t.starred).slice(0, 3);
+
+    // ── Write pv2 starred tasks into dream_top3_ so the global top3 system
+    //    and progress tab always reflect the Planner's starred tasks ──
+    try {
+      const slots = [null, null, null];
+      starred.forEach(function(t, i) {
+        slots[i] = { id: t.id, text: t.name, srcType: 'pv2', srcId: t.id, completed: t.done };
+      });
+      localStorage.setItem('dream_top3_' + key, JSON.stringify(slots));
+      // Reload the global top3 in-memory state so top3Grid also updates
+      if (typeof window._top3LoadForDate === 'function') window._top3LoadForDate(key);
+    } catch(e) {}
+
+    const grid = document.getElementById('progTop3Grid');
+    if (!grid) return;
+
+    if (!starred.length) {
+      grid.innerHTML = '<div class="prog-top3-empty-msg" style="grid-column:1/-1">No top tasks pinned yet — star tasks in the Planner to set your Top 3.</div>';
+      return;
+    }
+    grid.innerHTML = starred.map(function(t, i) {
+      return '<div class="prog-top3-item ' + (t.done ? 'done' : '') + '">' +
+        '<div class="prog-top3-num">' + (i + 1) + '</div>' +
+        '<div class="prog-top3-check ' + (t.done ? 'checked' : '') + '" onclick="pv2ToggleDone(\'' + esc(key) + '\',\'' + esc(t.id) + '\')"></div>' +
+        '<div class="prog-top3-text">' + esc(t.name) + '</div>' +
+        '</div>';
+    }).join('');
+  }
+
+  // ──────────────────────────────────────────────
+  //  MAIN RENDER
+  // ──────────────────────────────────────────────
+  function pv2Render() {
+    renderHeader();
+    const key   = getCurKey();
+    const tasks = tasksForKey(key);
+    renderProgressBar(tasks);
+    renderTop3Section(tasks);
+    renderTaskList(key, tasks);
+    renderMatrix(tasks);
+    syncProgressTop3(tasks);
+  }
+  window.pv2Render = pv2Render;
+
+  // ──────────────────────────────────────────────
+  //  INIT & HOOKS
+  // ──────────────────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function() {
+    load();
+
+    // ── Store refs to original plannerChangeDay / GoToday for interop ──
+    // (module script defines these; we save them so pv2NavDay can call them)
+    if (typeof window.plannerChangeDay === 'function' && !window._origPlannerChangeDay) {
+      window._origPlannerChangeDay = window.plannerChangeDay;
+    }
+    if (typeof window.plannerGoToday === 'function' && !window._origPlannerGoToday) {
+      window._origPlannerGoToday = window.plannerGoToday;
+    }
+
+    // ── Override _renderProgTop3 so Progress tab always uses pv2 starred tasks ──
+    window._renderProgTop3 = function() {
+      var key   = getCurKey();
+      var tasks = tasksForKey(key);
+      syncProgressTop3(tasks);
+    };
+
+    // ── Patch switchView so switching to planner/progress refreshes pv2 ──
+    var _origSwitchView = window.switchView;
+    if (_origSwitchView) {
+      window.switchView = function(view) {
+        _origSwitchView(view);
+        if (view === 'planner' || view === 'progress') {
+          setTimeout(function() { load(); pv2Render(); }, 50);
+        }
+      };
+    }
+
+    pv2Render();
+  });
+
+  window.addEventListener('load', function() {
+    load();
+    pv2Render();
+  });
 
 })();
 </script>
