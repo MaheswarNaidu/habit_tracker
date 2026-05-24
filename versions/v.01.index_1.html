@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Habit Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --g0:#EAF3DE;--g1:#C0DD97;--g2:#97C459;--g3:#639922;--g4:#2E7D32;--g5:#1B5E20;
+  --white:#fff;--page:#F0F5EC;--border:#DCEDC8;--border2:#c5e0a0;
+  --text:#1a2218;--muted:#6b7f64;--dim:#9aad93;
+  --red:#d32f2f;--red-bg:#fff5f5;--red-border:#ffcdd2;
+  --amber:#F9A825;--amber-bg:#FFFDE7;--amber-border:#FFF176;
+  --rsm:6px;--rmd:12px;--rlg:18px;--rxl:20px;
+  --shadow:0 1px 6px rgba(46,125,50,.09);
+  --shadow-lg:0 4px 20px rgba(46,125,50,.12);
+  --col-habit:150px;--col-day:28px;--row-h:38px;--head-h:34px;--foot-h:30px;
+}
+@media(min-width:768px){:root{--col-habit:170px;--col-day:32px;--row-h:40px;--head-h:36px}}
+@media(min-width:1024px){:root{--col-habit:180px;--col-day:34px;--row-h:40px;--head-h:36px}}
+
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--page);color:var(--text)}
+body{min-height:100vh;display:flex;flex-direction:column}
+
+/* ── APP SHELL ── */
+.app-header{background:linear-gradient(135deg,var(--g5) 0%,var(--g4) 60%,var(--g3) 100%);padding:11px 0;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.app-header-inner{width:100%;max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between}
+.header-left{display:flex;flex-direction:column;gap:1px}
+.app-title{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#C8E6C9;letter-spacing:.5px;line-height:1}
+.app-sub{font-size:.56rem;color:rgba(200,230,201,.5);font-weight:400;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.header-right{display:flex;align-items:center;gap:10px}
+.header-badge{font-family:'DM Mono',monospace;font-size:.6rem;color:rgba(200,230,201,.55);background:rgba(255,255,255,.08);border:1px solid rgba(200,230,201,.15);border-radius:20px;padding:3px 10px;letter-spacing:.5px}
+
+/* ── USER PILL ── */
+.user-pill{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);border:1px solid rgba(200,230,201,.2);border-radius:24px;padding:4px 12px 4px 4px;cursor:default}
+.user-avatar{width:22px;height:22px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(200,230,201,.4);flex-shrink:0}
+.user-avatar-placeholder{width:22px;height:22px;border-radius:50%;background:var(--g3);display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;flex-shrink:0}
+.user-name{font-size:.62rem;color:rgba(200,230,201,.8);font-weight:600;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sign-out-btn{background:rgba(255,255,255,.12);border:1px solid rgba(200,230,201,.2);color:rgba(200,230,201,.7);font-size:.58rem;font-weight:600;padding:3px 8px;border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;white-space:nowrap}
+.sign-out-btn:hover{background:rgba(255,255,255,.2);color:#C8E6C9}
+
+/* ── TABS ── */
+.tabs-bar{background:var(--g5);border-bottom:1px solid rgba(255,255,255,.07)}
+.tabs-inner{width:100%;max-width:1280px;margin:0 auto;padding:0 20px;display:flex}
+.tab{padding:9px 18px;font-size:.72rem;font-weight:600;color:rgba(200,230,201,.5);border:none;background:transparent;cursor:pointer;border-bottom:2.5px solid transparent;transition:all .18s;font-family:'DM Sans',sans-serif;letter-spacing:.3px;position:relative;bottom:-1px}
+.tab.active{color:#A5D6A7;border-bottom-color:#81C784}
+.tab:hover:not(.active){color:rgba(200,230,201,.75)}
+
+/* ── PAGE WRAPPER ── */
+.page-wrap{width:100%;max-width:1280px;margin:0 auto;padding:18px 20px 60px}
+@media(max-width:767px){.page-wrap{padding:12px 12px 70px}}
+
+/* ── VIEWS ── */
+.view{display:none}.view.active{display:block}
+
+/* ── MONTH LAYOUT ── */
+.month-layout{display:flex;flex-direction:column;gap:16px}
+@media(min-width:900px){
+  .month-layout{flex-direction:row;align-items:flex-start;gap:20px}
+  .month-main{flex:1;min-width:0}
+  .month-sidebar{flex-shrink:0;width:220px;display:flex;flex-direction:column;gap:10px}
+}
+
+.nav-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.month-title{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;color:var(--g5);flex:1;letter-spacing:-.2px}
+.nav-btn{background:var(--white);border:1.5px solid var(--border2);border-radius:var(--rsm);width:30px;height:30px;cursor:pointer;font-size:.85rem;color:var(--g4);display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;box-shadow:var(--shadow)}
+.nav-btn:hover{background:var(--g0);border-color:var(--g3)}
+.today-btn{padding:0 11px;width:auto;font-size:.65rem;font-weight:700;letter-spacing:.5px;font-family:'DM Sans',sans-serif}
+
+/* ── METRICS ── */
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}
+@media(max-width:380px){.metrics{grid-template-columns:repeat(2,1fr)}.metrics .metric:last-child{grid-column:span 2}}
+@media(min-width:900px){.metrics{grid-template-columns:1fr;gap:8px;margin-bottom:0}}
+.metric{background:var(--white);border-radius:var(--rmd);padding:12px 14px;border:1.5px solid var(--border);box-shadow:var(--shadow);position:relative;overflow:hidden}
+.metric::before{content:'';position:absolute;right:-6px;bottom:-8px;width:38px;height:38px;border-radius:50%;background:var(--g0);opacity:.6}
+.metric .lbl{font-size:.54rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:2px;font-weight:600}
+.metric .val{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--g4);line-height:1}
+.metric .sub{font-size:.58rem;color:var(--g3);margin-top:2px;font-weight:500}
+
+/* ── TRACKER CARD ── */
+.tracker-card{background:var(--white);border-radius:var(--rxl);border:1.5px solid var(--border);overflow:hidden;box-shadow:var(--shadow-lg)}
+.tracker-head{background:linear-gradient(90deg,var(--g4),var(--g3));color:#C8E6C9;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:.74rem;letter-spacing:.3px}
+.tracker-head-right{font-size:.62rem;opacity:.75}
+
+/* ── TABLE ── */
+.tbl-outer{position:relative;overflow:hidden}
+.tbl-scroll{overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--g2) var(--g0)}
+.tbl-scroll::-webkit-scrollbar{height:5px}
+.tbl-scroll::-webkit-scrollbar-track{background:var(--g0)}
+.tbl-scroll::-webkit-scrollbar-thumb{background:var(--g2);border-radius:3px}
+table{border-collapse:separate;border-spacing:0;table-layout:fixed;width:max-content;min-width:100%}
+
+/* ── STICKY FIRST COLUMN ── */
+th.hcol,td.hcol{position:sticky;left:0;z-index:10;background:var(--white);width:var(--col-habit);min-width:var(--col-habit);max-width:var(--col-habit)}
+thead th.hcol{background:var(--g0);z-index:12}
+tfoot td.hcol{background:var(--g0);z-index:12}
+th.hcol::after,td.hcol::after{content:'';position:absolute;top:0;right:-6px;bottom:0;width:6px;background:linear-gradient(to right,rgba(0,0,0,.05),transparent);pointer-events:none}
+
+/* ── THEAD ── */
+thead th{font-size:.54rem;color:var(--muted);padding:0 1px;height:var(--head-h);text-align:center;background:var(--g0);border-bottom:2px solid var(--border2);font-weight:700;width:var(--col-day);min-width:var(--col-day);max-width:var(--col-day);white-space:nowrap;font-family:'DM Mono',monospace}
+thead th.hcol{text-align:left;padding-left:12px;font-size:.6rem;font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:.4px}
+thead th.today-col{background:rgba(99,153,34,.16);color:var(--g4);position:relative}
+thead th.today-col::after{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:var(--g3);border-radius:0 0 2px 2px}
+
+/* ── TBODY ── */
+tbody tr{border-bottom:1px solid var(--g0);transition:background .1s}
+tbody tr:hover{background:#f5faf2}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover td.hcol{background:#f5faf2}
+td{padding:0 2px;height:var(--row-h);text-align:center;font-size:.65rem;width:var(--col-day);min-width:var(--col-day);max-width:var(--col-day)}
+td.hcol{text-align:left;padding-left:12px;font-size:.76rem;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-right:1px solid var(--border)}
+.hcol-content{display:flex;align-items:center;gap:6px;overflow:hidden}
+.hcol-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.76rem}
+td.today-col{background:rgba(99,153,34,.04)}
+tbody tr:hover td.today-col{background:rgba(99,153,34,.07)}
+
+/* ── CHECKBOXES ── */
+.cb{width:17px;height:17px;border-radius:4px;border:1.5px solid var(--border2);margin:0 auto;cursor:pointer;transition:all .12s;display:flex;align-items:center;justify-content:center;font-size:.6rem;user-select:none;background:var(--white)}
+.cb:hover{border-color:var(--g3);background:var(--g0)}
+.cb.on{background:var(--g3);border-color:var(--g3);color:#fff;box-shadow:0 1px 5px rgba(99,153,34,.3)}
+.cb.on::after{content:'✓';font-weight:700;font-size:.6rem}
+.cb.future{opacity:.3;cursor:default}
+.cb.future:hover{border-color:var(--border2);background:var(--white)}
+@media(min-width:768px){.cb{width:18px;height:18px}}
+
+/* ── TFOOT ── */
+tfoot td{background:var(--g0);font-size:.57rem;font-weight:700;color:var(--g4);padding:0 2px;height:var(--foot-h);text-align:center;font-family:'DM Mono',monospace;border-top:1.5px solid var(--border2)}
+tfoot td.hcol{text-align:left;padding-left:12px;font-family:'DM Sans',sans-serif;font-size:.58rem;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+.pct-good{color:var(--g4)}.pct-mid{color:#F9A825}.pct-low{color:var(--red)}
+
+/* ── ADD / MANAGE ── */
+.add-area{background:var(--white);border-radius:var(--rlg);border:1.5px solid var(--border);padding:14px;margin-bottom:14px;box-shadow:var(--shadow)}
+.add-label{font-size:.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.add-row{display:flex;gap:8px}
+.add-row input{flex:1;padding:8px 12px;border-radius:var(--rsm);border:1.5px solid var(--border);font-size:.8rem;background:var(--white);color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s}
+.add-row input:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(99,153,34,.1)}
+.add-row button{padding:8px 16px;border-radius:var(--rsm);background:var(--g4);color:#C8E6C9;border:none;font-size:.8rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;white-space:nowrap}
+.add-row button:hover{background:var(--g5)}
+.manage-panel{background:var(--white);border-radius:var(--rlg);border:1.5px solid var(--border);overflow:hidden;margin-bottom:16px;display:none;box-shadow:var(--shadow-lg)}
+.manage-panel.open{display:block}
+.manage-panel-head{background:linear-gradient(90deg,var(--g4),var(--g3));color:#C8E6C9;padding:10px 14px;display:flex;justify-content:space-between;align-items:center}
+.manage-panel-head .mh-left{display:flex;flex-direction:column;gap:2px}
+.manage-panel-head .mh-title{font-weight:700;font-size:.82rem}
+.manage-panel-head .mh-hint{font-size:.62rem;opacity:.6}
+.manage-panel-head .mh-actions{display:flex;gap:6px;flex-shrink:0}
+.habit-manage-row{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--g0);transition:background .1s}
+.habit-manage-row:last-child{border-bottom:none}
+.habit-manage-row:hover{background:var(--page)}
+.hmr-name{flex:1;font-size:.82rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.hmr-btns{display:flex;gap:5px;flex-shrink:0}
+.hmr-btn{height:28px;padding:0 10px;border-radius:5px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.72rem;color:var(--muted);flex-shrink:0;transition:all .12s}
+.hmr-btn:hover{background:var(--g0);border-color:var(--g3)}
+.hmr-btn.edit{color:var(--g4);border-color:var(--g2)}
+.hmr-btn.del{color:var(--red);border-color:var(--red-border);background:var(--red-bg);font-size:.68rem;font-weight:700}
+.hmr-btn.del:hover{background:var(--red-border)}
+.hmr-btn:disabled{opacity:.3;cursor:default}
+.hmr-input{flex:1;border:1.5px solid var(--g3);border-radius:5px;padding:5px 8px;font-size:.8rem;font-family:'DM Sans',sans-serif;outline:none;color:var(--text);min-width:0;box-shadow:0 0 0 3px rgba(99,153,34,.1)}
+.hmr-save{padding:5px 12px;border-radius:5px;background:var(--g3);color:#fff;border:none;font-size:.7rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;flex-shrink:0}
+
+/* ── YEAR VIEW ── */
+.year-metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:16px}
+@media(min-width:480px){.year-metrics{grid-template-columns:repeat(4,1fr)}}
+.habit-pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.hpill{padding:4px 11px;border-radius:20px;font-size:.65rem;font-weight:600;border:1.5px solid var(--border);cursor:pointer;color:var(--muted);background:var(--white);transition:all .15s;box-shadow:var(--shadow)}
+.hpill:hover{border-color:var(--g3);color:var(--g4)}
+.hpill.sel{background:var(--g4);color:#C8E6C9;border-color:var(--g4)}
+.heatmap-card{background:var(--white);border-radius:var(--rlg);border:1.5px solid var(--border);padding:14px;overflow-x:auto;margin-bottom:16px;box-shadow:var(--shadow)}
+.hm-label{font-size:.58rem;font-weight:700;color:var(--muted);margin-bottom:2px;text-transform:uppercase;letter-spacing:1px}
+.hm-name{font-size:.78rem;font-weight:600;color:var(--g4);margin-bottom:10px}
+.hm-grid{display:flex;gap:3px;min-width:320px}
+.hm-month{display:flex;flex-direction:column;gap:2px}
+.hm-month-label{font-size:.48rem;color:var(--muted);margin-bottom:3px;text-align:center;font-weight:700;font-family:'DM Mono',monospace}
+.hm-day{width:11px;height:11px;border-radius:2px;background:var(--g0)}
+.hm-day.l1{background:var(--g1)}.hm-day.l2{background:var(--g2)}.hm-day.l3{background:var(--g3)}.hm-day.l4{background:var(--g4)}
+.hm-day.empty{background:transparent}
+.legend{display:flex;align-items:center;gap:5px;margin-top:8px}
+.legend-lbl{font-size:.56rem;color:var(--muted)}
+.legend-box{width:10px;height:10px;border-radius:2px}
+.month-grid-year{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+@media(min-width:480px){.month-grid-year{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:900px){.month-grid-year{grid-template-columns:repeat(6,1fr)}}
+.month-mini{background:var(--white);border:1.5px solid var(--border);border-radius:var(--rsm);padding:10px;box-shadow:var(--shadow)}
+.mm-name{font-size:.64rem;font-weight:700;color:var(--muted);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.mm-bar-wrap{height:4px;background:var(--g0);border-radius:3px;overflow:hidden}
+.mm-bar{height:100%;background:var(--g3);border-radius:3px;transition:width .4s}
+.mm-pct{font-size:.78rem;font-weight:700;color:var(--g4);margin-top:4px;font-family:'DM Mono',monospace}
+.section-label{font-size:.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;margin-top:14px;display:block}
+
+/* ── SCROLL HINT ── */
+.scroll-hint{display:flex;align-items:center;gap:6px;font-size:.6rem;color:var(--dim);padding:7px 12px 5px;font-weight:500}
+.scroll-hint svg{flex-shrink:0}
+@media(min-width:1024px){.scroll-hint{display:none}}
+@media(min-width:900px){#metricsStrip{display:none}}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--g5);color:#C8E6C9;padding:9px 20px;border-radius:24px;font-size:.74rem;font-weight:600;opacity:0;transition:opacity .25s,transform .25s;pointer-events:none;z-index:1000;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.2)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{position:fixed;inset:0;z-index:998;background:var(--page);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.login-card{background:var(--white);border-radius:24px;border:1.5px solid var(--border);box-shadow:var(--shadow-lg);padding:40px 36px;display:flex;flex-direction:column;align-items:center;gap:0;max-width:360px;width:90%}
+.login-logo{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--g4);letter-spacing:.5px;margin-bottom:4px}
+.login-sub{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:28px}
+.login-desc{font-size:.8rem;color:var(--muted);text-align:center;margin-bottom:24px;line-height:1.5}
+.google-btn{display:flex;align-items:center;justify-content:center;gap:10px;background:var(--white);border:1.5px solid var(--border2);border-radius:10px;padding:11px 22px;font-size:.84rem;font-weight:600;color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s;box-shadow:var(--shadow);width:100%}
+.google-btn:hover{background:var(--g0);border-color:var(--g3);box-shadow:0 3px 12px rgba(46,125,50,.15)}
+.google-btn svg{flex-shrink:0}
+.login-note{font-size:.58rem;color:var(--dim);margin-top:16px;text-align:center;line-height:1.4}
+
+/* ── LOADING OVERLAY ── */
+#loadingOverlay{position:fixed;inset:0;z-index:999;background:var(--page);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.loading-spinner{width:32px;height:32px;border:3px solid var(--border2);border-top-color:var(--g3);border-radius:50%;animation:spin .7s linear infinite}
+.loading-text{font-size:.68rem;color:var(--muted);font-weight:600;letter-spacing:1px;text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── FIREBASE CONFIG NOTICE ── */
+.config-notice{background:#fff8e1;border:1.5px solid #ffe082;border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:.78rem;color:#5d4037;line-height:1.5}
+.config-notice strong{display:block;margin-bottom:4px;color:#e65100}
+.config-notice code{background:#fff3e0;border-radius:3px;padding:1px 4px;font-family:'DM Mono',monospace;font-size:.72rem}
+
+/* ══════════════════════════════════════════════
+   ── BULK MANAGEMENT STYLES (NEW) ──
+══════════════════════════════════════════════ */
+
+/* ── Bulk Action Bar ── */
+.bulk-action-bar{
+  display:flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,#fff8e1,#fffde7);
+  border:1.5px solid var(--amber-border);
+  border-radius:var(--rmd);
+  padding:10px 14px;
+  margin-bottom:14px;
+  box-shadow:0 2px 8px rgba(249,168,37,.12);
+  flex-wrap:wrap;
+}
+.bulk-bar-label{
+  font-size:.65rem;font-weight:700;color:#6d4c00;
+  text-transform:uppercase;letter-spacing:.8px;flex:1;
+  display:flex;align-items:center;gap:6px;
+}
+.bulk-bar-label svg{color:var(--amber)}
+.bulk-btn{
+  height:30px;padding:0 12px;border-radius:6px;border:1.5px solid;
+  cursor:pointer;font-size:.7rem;font-weight:700;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap;
+}
+.bulk-btn.danger{
+  color:var(--red);border-color:var(--red-border);background:var(--red-bg);
+}
+.bulk-btn.danger:hover{background:#ffebee;border-color:#ef9a9a}
+.bulk-btn.primary{
+  color:var(--g4);border-color:var(--g2);background:var(--g0);
+}
+.bulk-btn.primary:hover{background:var(--g1);border-color:var(--g3)}
+
+/* ── Delete-All Danger Zone ── */
+.danger-zone{
+  background:var(--red-bg);border:1.5px solid var(--red-border);
+  border-radius:var(--rmd);padding:12px 14px;margin-top:12px;
+}
+.danger-zone-title{font-size:.62rem;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.danger-zone-desc{font-size:.72rem;color:#6b0000;margin-bottom:10px;line-height:1.4}
+.danger-delete-all-btn{
+  height:32px;padding:0 14px;border-radius:6px;
+  background:var(--red);color:#fff;border:none;
+  font-size:.72rem;font-weight:700;cursor:pointer;
+  font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;gap:6px;
+  transition:background .15s;
+}
+.danger-delete-all-btn:hover{background:#b71c1c}
+.danger-delete-all-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* ── Bulk Add Panel ── */
+.bulk-add-panel{
+  background:var(--white);border-radius:var(--rlg);
+  border:1.5px solid var(--border);
+  padding:0;overflow:hidden;
+  margin-bottom:14px;box-shadow:var(--shadow-lg);
+  display:none;
+}
+.bulk-add-panel.open{display:block}
+.bulk-add-head{
+  background:linear-gradient(90deg,var(--g4),var(--g3));
+  color:#C8E6C9;padding:10px 14px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.bulk-add-head-title{font-weight:700;font-size:.82rem}
+.bulk-add-head-hint{font-size:.62rem;opacity:.6}
+.bulk-add-close{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:5px;color:#fff;cursor:pointer;padding:3px 8px;font-size:.65rem;font-weight:700;font-family:'DM Sans',sans-serif;transition:background .15s}
+.bulk-add-close:hover{background:rgba(255,255,255,.25)}
+.bulk-add-body{padding:14px;display:flex;flex-direction:column;gap:10px}
+.bulk-add-textarea{
+  width:100%;min-height:120px;max-height:260px;
+  border:1.5px solid var(--border);border-radius:var(--rsm);
+  padding:10px 12px;font-size:.8rem;font-family:'DM Sans',sans-serif;
+  color:var(--text);background:var(--page);outline:none;resize:vertical;
+  line-height:1.6;transition:border-color .15s;
+}
+.bulk-add-textarea:focus{border-color:var(--g3);background:var(--white);box-shadow:0 0 0 3px rgba(99,153,34,.1)}
+.bulk-add-textarea::placeholder{color:var(--dim)}
+.bulk-add-hint{font-size:.65rem;color:var(--muted);line-height:1.5}
+.bulk-add-hint code{background:var(--g0);border-radius:3px;padding:1px 5px;font-family:'DM Mono',monospace;color:var(--g4)}
+.bulk-add-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.bulk-add-preview{
+  background:var(--g0);border:1.5px solid var(--border2);
+  border-radius:var(--rsm);padding:8px 12px;
+  font-size:.68rem;color:var(--g5);font-weight:600;
+  display:none;
+}
+.bulk-add-preview.visible{display:block}
+.bulk-add-submit{
+  padding:8px 18px;border-radius:var(--rsm);
+  background:var(--g4);color:#C8E6C9;border:none;
+  font-size:.78rem;font-weight:700;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:background .15s;
+}
+.bulk-add-submit:hover{background:var(--g5)}
+.bulk-add-submit:disabled{opacity:.4;cursor:not-allowed}
+.bulk-add-cancel{
+  padding:8px 14px;border-radius:var(--rsm);
+  background:var(--white);color:var(--muted);
+  border:1.5px solid var(--border);
+  font-size:.78rem;font-weight:600;cursor:pointer;
+  font-family:'DM Sans',sans-serif;transition:all .15s;
+}
+.bulk-add-cancel:hover{background:var(--page);border-color:var(--border2)}
+
+/* ── Import tab within bulk add ── */
+.bulk-tabs{display:flex;gap:0;border-bottom:1.5px solid var(--border);margin:-14px -14px 14px;padding:0 14px}
+.bulk-tab{padding:8px 14px;font-size:.68rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1.5px;transition:all .15s;font-family:'DM Sans',sans-serif}
+.bulk-tab.active{color:var(--g4);border-bottom-color:var(--g3)}
+.bulk-tab:hover:not(.active){color:var(--text)}
+.bulk-tab-content{display:none}
+.bulk-tab-content.active{display:block}
+.import-drop-zone{
+  border:2px dashed var(--border2);border-radius:var(--rsm);
+  padding:24px 14px;text-align:center;cursor:pointer;
+  transition:all .2s;background:var(--page);
+}
+.import-drop-zone:hover,.import-drop-zone.drag-over{
+  border-color:var(--g3);background:var(--g0);
+}
+.import-drop-icon{font-size:1.5rem;margin-bottom:6px}
+.import-drop-text{font-size:.76rem;font-weight:600;color:var(--text);margin-bottom:3px}
+.import-drop-hint{font-size:.62rem;color:var(--muted)}
+.import-file-input{display:none}
+.import-or{font-size:.62rem;color:var(--dim);text-align:center;margin:8px 0;position:relative}
+.import-or::before,.import-or::after{content:'';position:absolute;top:50%;width:calc(50% - 24px);height:1px;background:var(--border)}
+.import-or::before{left:0}.import-or::after{right:0}
+.import-paste-area{display:flex;flex-direction:column;gap:6px}
+.import-paste-label{font-size:.6rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.import-format-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px}
+.format-chip{padding:3px 9px;border-radius:20px;font-size:.6rem;font-weight:600;border:1.5px solid var(--border);cursor:pointer;color:var(--muted);background:var(--white);transition:all .12s;font-family:'DM Mono',monospace}
+.format-chip.active,.format-chip:hover{border-color:var(--g3);color:var(--g4);background:var(--g0)}
+
+/* ── Confirmation Modal ── */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);
+  display:flex;align-items:center;justify-content:center;
+  z-index:900;opacity:0;pointer-events:none;
+  transition:opacity .2s;
+}
+.modal-backdrop.open{opacity:1;pointer-events:all}
+.modal-card{
+  background:var(--white);border-radius:20px;
+  border:1.5px solid var(--border);
+  box-shadow:0 8px 40px rgba(0,0,0,.18);
+  padding:28px 28px 22px;
+  max-width:380px;width:calc(100% - 40px);
+  transform:translateY(12px) scale(.97);
+  transition:transform .2s,opacity .2s;
+  opacity:0;
+}
+.modal-backdrop.open .modal-card{transform:translateY(0) scale(1);opacity:1}
+.modal-icon{font-size:1.8rem;margin-bottom:8px;text-align:center}
+.modal-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:var(--text);margin-bottom:6px;text-align:center}
+.modal-body{font-size:.78rem;color:var(--muted);line-height:1.5;text-align:center;margin-bottom:18px}
+.modal-body strong{color:var(--red);font-weight:700}
+.modal-body .habit-count-badge{
+  display:inline-block;background:var(--red-bg);color:var(--red);
+  border:1px solid var(--red-border);border-radius:20px;
+  padding:2px 10px;font-weight:700;font-family:'DM Mono',monospace;font-size:.78rem;
+  margin:4px 0;
+}
+.modal-actions{display:flex;gap:8px;justify-content:center}
+.modal-btn{
+  height:36px;padding:0 20px;border-radius:8px;
+  font-size:.76rem;font-weight:700;cursor:pointer;
+  font-family:'DM Sans',sans-serif;border:1.5px solid;
+  transition:all .15s;display:flex;align-items:center;gap:5px;
+}
+.modal-btn.cancel{color:var(--muted);border-color:var(--border);background:var(--white)}
+.modal-btn.cancel:hover{background:var(--page)}
+.modal-btn.confirm-delete{color:#fff;border-color:var(--red);background:var(--red)}
+.modal-btn.confirm-delete:hover{background:#b71c1c;border-color:#b71c1c}
+.modal-confirm-input-wrap{margin-bottom:14px}
+.modal-confirm-input-label{font-size:.65rem;color:var(--muted);margin-bottom:4px;text-align:left}
+.modal-confirm-input{
+  width:100%;padding:8px 12px;border-radius:6px;
+  border:1.5px solid var(--border);font-size:.8rem;
+  font-family:'DM Mono',monospace;outline:none;transition:all .15s;
+  text-align:center;letter-spacing:1px;
+}
+.modal-confirm-input:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(211,47,47,.1)}
+.modal-confirm-input.valid{border-color:var(--red);background:#fff5f5}
+
+/* ── Bulk Add Success Indicator ── */
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.bulk-add-result{
+  background:var(--g0);border:1.5px solid var(--g2);
+  border-radius:var(--rsm);padding:8px 12px;
+  font-size:.7rem;color:var(--g5);font-weight:600;
+  display:flex;align-items:center;gap:6px;
+  animation:slideIn .25s ease;
+}
+.bulk-add-result .tag-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.habit-tag{
+  background:var(--white);border:1px solid var(--g2);
+  border-radius:20px;padding:2px 8px;font-size:.58rem;
+  color:var(--g4);font-weight:600;
+}
+
+/* ── Manage tab toggle button style ── */
+.manage-section-toggle{
+  background:var(--g0);border:1.5px solid var(--border2);
+  border-radius:var(--rsm);padding:6px 12px;
+  font-size:.7rem;font-weight:700;color:var(--g4);
+  cursor:pointer;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;gap:5px;
+  transition:all .15s;white-space:nowrap;
+}
+.manage-section-toggle:hover{background:var(--g1);border-color:var(--g3)}
+.manage-section-toggle.open-state{background:var(--g4);color:#C8E6C9;border-color:var(--g4)}
+
+/* ── Responsive tweaks ── */
+@media(max-width:480px){
+  .bulk-action-bar{flex-direction:column;align-items:flex-start}
+  .modal-actions{flex-direction:column}
+  .modal-btn{justify-content:center}
+  .manage-panel-head{flex-wrap:wrap;gap:8px}
+  .mh-actions{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<!-- ── LOGIN SCREEN ── -->
+<div id="loginScreen" style="display:none">
+  <div class="login-card">
+    <div class="login-logo">Habit Tracker</div>
+    <div class="login-sub">Track · Build · Sustain</div>
+    <p class="login-desc">Sign in to sync your habits across all your devices automatically.</p>
+    <button class="google-btn" onclick="signInWithGoogle()">
+      <svg width="18" height="18" viewBox="0 0 18 18"><path fill="#4285F4" d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z"/><path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z"/><path fill="#FBBC05" d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z"/><path fill="#EA4335" d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z"/></svg>
+      Continue with Google
+    </button>
+    <p class="login-note">Your data is private — each account has its own separate habit history.</p>
+  </div>
+</div>
+
+<!-- ── LOADING OVERLAY ── -->
+<div id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading…</div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="appShell" style="display:none;flex-direction:column;flex:1">
+
+<header class="app-header">
+  <div class="app-header-inner">
+    <div class="header-left">
+      <div class="app-title">Habit Tracker</div>
+      <div class="app-sub">Track · Build · Sustain</div>
+    </div>
+    <div class="header-right">
+      <span class="header-badge" id="todayDate"></span>
+      <div class="user-pill" id="userPill" style="display:none">
+        <div class="user-avatar-placeholder" id="userAvatarPlaceholder"></div>
+        <img class="user-avatar" id="userAvatarImg" style="display:none" alt=""/>
+        <span class="user-name" id="userName"></span>
+        <button class="sign-out-btn" onclick="signOut()">Sign out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs-bar">
+  <div class="tabs-inner">
+    <button class="tab active" onclick="switchView('month')">Month</button>
+    <button class="tab" onclick="switchView('year')">Year</button>
+    <button class="tab" onclick="switchView('manage')">Manage</button>
+  </div>
+</nav>
+
+<!-- ═══════════════ MONTH VIEW ═══════════════ -->
+<div class="view active" id="view-month">
+  <div class="page-wrap">
+    <div class="month-layout">
+      <div class="month-main">
+        <div class="nav-row">
+          <h2 class="month-title" id="monthLabel"></h2>
+          <button class="nav-btn today-btn" onclick="goToday()">Today</button>
+          <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
+          <button class="nav-btn" onclick="changeMonth(1)">›</button>
+        </div>
+        <div class="metrics" id="metricsStrip"></div>
+        <div class="tracker-card">
+          <div class="tracker-head">
+            <span>MY HABITS</span>
+            <span class="tracker-head-right" id="daysLabel"></span>
+          </div>
+          <div class="scroll-hint">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Scroll to see all days
+          </div>
+          <div class="tbl-outer">
+            <div class="tbl-scroll" id="tblScroll">
+              <table id="habitTable">
+                <thead id="tHead"></thead>
+                <tbody id="tBody"></tbody>
+                <tfoot id="tFoot"></tfoot>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="month-sidebar" id="metricsSidebar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ YEAR VIEW ═══════════════ -->
+<div class="view" id="view-year">
+  <div class="page-wrap">
+    <div class="nav-row">
+      <h2 class="month-title" id="yearLabel"></h2>
+      <button class="nav-btn" onclick="changeYear(-1)">‹</button>
+      <button class="nav-btn" onclick="changeYear(1)">›</button>
+    </div>
+    <div class="year-metrics" id="yearMetrics"></div>
+    <span class="section-label">Filter by habit</span>
+    <div class="habit-pills" id="habitPills"></div>
+    <div class="heatmap-card">
+      <div class="hm-label">Activity Heatmap</div>
+      <div class="hm-name" id="hmLabel"></div>
+      <div class="hm-grid" id="heatmapGrid"></div>
+      <div class="legend">
+        <span class="legend-lbl">Less</span>
+        <div class="legend-box" style="background:var(--g0)"></div>
+        <div class="legend-box" style="background:var(--g1)"></div>
+        <div class="legend-box" style="background:var(--g2)"></div>
+        <div class="legend-box" style="background:var(--g3)"></div>
+        <div class="legend-box" style="background:var(--g4)"></div>
+        <span class="legend-lbl">More</span>
+      </div>
+    </div>
+    <span class="section-label">Month breakdown</span>
+    <div class="month-grid-year" id="yearMonthGrid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════ MANAGE VIEW ═══════════════ -->
+<div class="view" id="view-manage">
+  <div class="page-wrap" style="max-width:700px">
+
+    <!-- ── Bulk Action Bar ── -->
+    <div class="bulk-action-bar" id="bulkActionBar">
+      <div class="bulk-bar-label">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 3h12M1 7h12M1 11h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Bulk Management
+      </div>
+      <button class="bulk-btn primary" onclick="openBulkAdd()">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        Add Multiple
+      </button>
+      <button class="bulk-btn danger" onclick="openDeleteAllModal()" id="deleteAllBtn">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1.5 3h9m-1 0V10a1 1 0 01-1 1H3.5a1 1 0 01-1-1V3m1.5 0V2a1 1 0 011-1h2a1 1 0 011 1v1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Delete All
+      </button>
+    </div>
+
+    <!-- ── Bulk Add Panel ── -->
+    <div class="bulk-add-panel" id="bulkAddPanel">
+      <div class="bulk-add-head">
+        <div>
+          <div class="bulk-add-head-title">Add Multiple Habits</div>
+          <div class="bulk-add-head-hint">Enter several habits at once or import from a file</div>
+        </div>
+        <button class="bulk-add-close" onclick="closeBulkAdd()">✕ Close</button>
+      </div>
+      <div class="bulk-add-body">
+        <!-- Tabs -->
+        <div class="bulk-tabs">
+          <div class="bulk-tab active" onclick="switchBulkTab('type')" id="btab-type">Type / Paste</div>
+          <div class="bulk-tab" onclick="switchBulkTab('import')" id="btab-import">Import File</div>
+        </div>
+
+        <!-- TYPE tab -->
+        <div class="bulk-tab-content active" id="bcontent-type">
+          <div class="bulk-add-hint">
+            Enter one habit per line. You can include an emoji prefix (optional).<br>
+            Example: <code>🏃 Morning Run</code> or just <code>Read 30 min</code>
+          </div>
+          <textarea
+            class="bulk-add-textarea"
+            id="bulkTextarea"
+            placeholder="🏃 Morning Run&#10;📚 Read 30 minutes&#10;💧 Drink 2L water&#10;🧘 Meditate&#10;🌙 Sleep by 10 PM"
+            oninput="updateBulkPreview()"
+          ></textarea>
+          <div class="bulk-add-preview" id="bulkPreview"></div>
+        </div>
+
+        <!-- IMPORT tab -->
+        <div class="bulk-tab-content" id="bcontent-import">
+          <div class="import-drop-zone" id="importDropZone" onclick="document.getElementById('importFileInput').click()" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleFileDrop(event)">
+            <div class="import-drop-icon">📂</div>
+            <div class="import-drop-text">Drop a file here or click to browse</div>
+            <div class="import-drop-hint">Supports .txt, .csv (one habit per line / first column)</div>
+          </div>
+          <input type="file" id="importFileInput" class="import-file-input" accept=".txt,.csv" onchange="handleFileImport(event)"/>
+          <div class="import-or">or paste raw text below</div>
+          <div class="import-paste-area">
+            <div class="import-paste-label">Format hint</div>
+            <div class="import-format-chips">
+              <div class="format-chip active" id="fmt-newline">One per line</div>
+              <div class="format-chip" id="fmt-comma">Comma separated</div>
+              <div class="format-chip" id="fmt-semicolon">Semicolon separated</div>
+            </div>
+            <textarea
+              class="bulk-add-textarea"
+              id="importPasteArea"
+              placeholder="Paste your habits here…"
+              oninput="updateImportPreview()"
+              style="min-height:80px"
+            ></textarea>
+            <div class="bulk-add-preview" id="importPreview"></div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="bulk-add-actions">
+          <button class="bulk-add-submit" id="bulkSubmitBtn" onclick="submitBulkAdd()">
+            ✚ Add Habits
+          </button>
+          <button class="bulk-add-cancel" onclick="closeBulkAdd()">Cancel</button>
+          <div style="flex:1"></div>
+          <div class="bulk-add-preview" id="bulkCountBadge" style="display:none;padding:5px 10px;font-size:.68rem"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Single Add Area ── -->
+    <div class="add-area">
+      <div class="add-label">Add single habit</div>
+      <div class="add-row">
+        <input type="text" id="newHabit" placeholder="e.g. Meditate, Walk 10k steps…" onkeydown="if(event.key==='Enter')addHabit()"/>
+        <button onclick="addHabit()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- ── Manage Panel ── -->
+    <div class="manage-panel open" id="managePanel">
+      <div class="manage-panel-head">
+        <div class="mh-left">
+          <div class="mh-title">Your Habits</div>
+          <div class="mh-hint">Reorder, rename, or remove habits</div>
+        </div>
+        <div class="mh-actions">
+          <button class="manage-section-toggle" id="dangerZoneToggle" onclick="toggleDangerZone()">
+            ⚠️ Danger Zone
+          </button>
+        </div>
+      </div>
+      <div id="manageList"></div>
+      <!-- Danger Zone (inside manage panel, collapsible) -->
+      <div class="danger-zone" id="dangerZoneSection" style="display:none;margin:0;border-radius:0;border-top:1.5px solid var(--red-border);border-bottom:none;border-left:none;border-right:none">
+        <div class="danger-zone-title">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 1L1 11.5h11L6.5 1z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6.5 5v3M6.5 9.5v.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          Danger Zone
+        </div>
+        <div class="danger-zone-desc">Permanently delete all habits and their tracking data. This cannot be undone.</div>
+        <button class="danger-delete-all-btn" onclick="openDeleteAllModal()" id="dangerDeleteBtn">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 3.5h10M4.5 3.5V2.5a1 1 0 011-1h2a1 1 0 011 1v1M5.5 6v4M7.5 6v4M2.5 3.5l.5 7a1 1 0 001 .9h5a1 1 0 001-.9l.5-7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Delete All Habits
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</div><!-- /#appShell -->
+
+<div class="toast" id="toast"></div>
+
+<!-- ══════════════════════════════════════════════
+     DELETE-ALL CONFIRMATION MODAL
+══════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="deleteAllModal">
+  <div class="modal-card">
+    <div class="modal-icon">🗑️</div>
+    <div class="modal-title">Delete All Habits?</div>
+    <div class="modal-body">
+      This will permanently remove <span class="habit-count-badge" id="modalHabitCount">0 habits</span> and all their tracking history.<br><br>
+      <strong>This action cannot be undone.</strong><br><br>
+      Type <strong>DELETE</strong> below to confirm:
+    </div>
+    <div class="modal-confirm-input-wrap">
+      <input
+        class="modal-confirm-input"
+        id="deleteConfirmInput"
+        type="text"
+        placeholder="Type DELETE to confirm"
+        oninput="checkDeleteConfirm()"
+        onkeydown="if(event.key==='Enter')confirmDeleteAll()"
+        autocomplete="off"
+        spellcheck="false"
+      />
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn cancel" onclick="closeDeleteAllModal()">Cancel</button>
+      <button class="modal-btn confirm-delete" id="confirmDeleteBtn" onclick="confirmDeleteAll()" disabled>
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 3.5h10M4.5 3.5V2.5a1 1 0 011-1h2a1 1 0 011 1v1M5.5 6v4M7.5 6v4M2.5 3.5l.5 7a1 1 0 001 .9h5a1 1 0 001-.9l.5-7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Delete All
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     FIREBASE SDK
+══════════════════════════════════════════════ -->
+<script type="module">
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCSPpAYOFpdf7sdZwCGbrKaKOAGatOTMqM",
+  authDomain: "habit-tracker-59ae5.firebaseapp.com",
+  projectId: "habit-tracker-59ae5",
+  storageBucket: "habit-tracker-59ae5.firebasestorage.app",
+  messagingSenderId: "600798443811",
+  appId: "1:600798443811:web:86d2f6db424a20ed30b496",
+  measurementId: "G-KVRB492SGH"
+};
+
+import { initializeApp }                              from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup,
+         onAuthStateChanged, signOut as fbSignOut }   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc,
+         updateDoc, serverTimestamp }                 from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+const isConfigured = FIREBASE_CONFIG.apiKey !== 'YOUR_API_KEY';
+let app, auth, db, currentUser = null;
+
+if (isConfigured) {
+  app  = initializeApp(FIREBASE_CONFIG);
+  auth = getAuth(app);
+  db   = getFirestore(app);
+}
+
+window.signInWithGoogle = async () => {
+  if (!isConfigured) { showConfigNotice(); return; }
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch (e) {
+    showToast('Sign-in failed. Try again.');
+    console.error(e);
+  }
+};
+
+window.signOut = async () => {
+  if (!isConfigured) return;
+  await fbSignOut(auth);
+};
+
+function bootWithoutFirebase() {
+  loadFromLocalStorage();
+  hideLoading();
+  showApp();
+  initUI();
+}
+
+if (!isConfigured) {
+  bootWithoutFirebase();
+  setTimeout(showConfigNotice, 800);
+} else {
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      currentUser = user;
+      updateUserUI(user);
+      setLoadingText('Syncing your data…');
+      await loadFromFirestore(user.uid);
+      hideLoading();
+      showApp();
+      initUI();
+    } else {
+      currentUser = null;
+      hideApp();
+      hideLoading();
+      showLoginScreen();
+    }
+  });
+}
+
+async function loadFromFirestore(uid) {
+  try {
+    const habitsSnap = await getDoc(doc(db, 'users', uid, 'config', 'habits'));
+    const dataSnap   = await getDoc(doc(db, 'users', uid, 'config', 'trackingData'));
+    if (habitsSnap.exists()) {
+      habits = habitsSnap.data().list || DEFAULT_HABITS.map(h=>({...h}));
+    } else {
+      habits = DEFAULT_HABITS.map(h=>({...h}));
+      await setDoc(doc(db, 'users', uid, 'config', 'habits'), { list: habits, createdAt: serverTimestamp() });
+    }
+    if (dataSnap.exists()) {
+      data = dataSnap.data().tracking || {};
+    } else {
+      data = {};
+      await setDoc(doc(db, 'users', uid, 'config', 'trackingData'), { tracking: {}, updatedAt: serverTimestamp() });
+    }
+  } catch (e) {
+    console.error('Firestore load error:', e);
+    showToast('Could not load data. Check console.');
+    habits = DEFAULT_HABITS.map(h=>({...h}));
+    data   = {};
+  }
+}
+
+let _saveTimer = null;
+async function saveData() {
+  if (!isConfigured || !currentUser) {
+    saveToLocalStorage();
+    return;
+  }
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(async () => {
+    try {
+      const uid = currentUser.uid;
+      await Promise.all([
+        setDoc(doc(db, 'users', uid, 'config', 'habits'), { list: habits, updatedAt: serverTimestamp() }),
+        setDoc(doc(db, 'users', uid, 'config', 'trackingData'), { tracking: data, updatedAt: serverTimestamp() })
+      ]);
+    } catch (e) {
+      console.error('Firestore save error:', e);
+      showToast('Save failed — check your connection.');
+    }
+  }, 400);
+}
+
+function saveToLocalStorage() {
+  try {
+    localStorage.setItem('ht_habits2', JSON.stringify(habits));
+    localStorage.setItem('ht_data2',   JSON.stringify(data));
+  } catch {}
+}
+function loadFromLocalStorage() {
+  try {
+    const h = localStorage.getItem('ht_habits2');
+    const d = localStorage.getItem('ht_data2');
+    habits = h ? JSON.parse(h) : DEFAULT_HABITS.map(x=>({...x}));
+    data   = d ? JSON.parse(d) : {};
+  } catch {
+    habits = DEFAULT_HABITS.map(x=>({...x}));
+    data   = {};
+  }
+}
+
+function setLoadingText(t){ const el=document.querySelector('.loading-text'); if(el) el.textContent=t; }
+function hideLoading(){
+  const o=document.getElementById('loadingOverlay');
+  if(!o)return;
+  o.style.transition='opacity .3s'; o.style.opacity='0';
+  setTimeout(()=>{ try{o.remove()}catch{} },320);
+}
+function showApp(){ const s=document.getElementById('appShell'); s.style.display='flex'; }
+function hideApp(){ document.getElementById('appShell').style.display='none'; }
+function showLoginScreen(){ document.getElementById('loginScreen').style.display='flex'; }
+function hideLoginScreen(){ document.getElementById('loginScreen').style.display='none'; }
+
+function updateUserUI(user) {
+  hideLoginScreen();
+  const pill = document.getElementById('userPill');
+  const nameEl = document.getElementById('userName');
+  const avatarImg = document.getElementById('userAvatarImg');
+  const avatarPlaceholder = document.getElementById('userAvatarPlaceholder');
+  pill.style.display = 'flex';
+  nameEl.textContent = user.displayName ? user.displayName.split(' ')[0] : 'User';
+  if (user.photoURL) {
+    avatarImg.src = user.photoURL;
+    avatarImg.style.display = 'block';
+    avatarPlaceholder.style.display = 'none';
+  } else {
+    avatarPlaceholder.textContent = (user.displayName||'U')[0].toUpperCase();
+    avatarPlaceholder.style.display = 'flex';
+    avatarImg.style.display = 'none';
+  }
+}
+
+function showConfigNotice() {
+  const manageWrap = document.querySelector('#view-manage .page-wrap');
+  if (!manageWrap || document.getElementById('configNotice')) return;
+  const notice = document.createElement('div');
+  notice.id = 'configNotice';
+  notice.className = 'config-notice';
+  notice.innerHTML = `<strong>⚙️ Firebase not configured — running in offline mode</strong>
+    To enable cloud sync &amp; Google login, open this file and replace the
+    <code>FIREBASE_CONFIG</code> values at the top of the &lt;script&gt; block
+    with your own Firebase project credentials.<br><br>
+    <strong>Quick setup:</strong><br>
+    1. Go to <a href="https://console.firebase.google.com" target="_blank" style="color:var(--g4)">console.firebase.google.com</a><br>
+    2. Create a project → Add a Web app<br>
+    3. Enable Authentication → Google sign-in<br>
+    4. Enable Firestore Database<br>
+    5. Copy the config object into this file`;
+  manageWrap.prepend(notice);
+}
+
+// ─────────────────────────────────────────────────────────
+//  APP LOGIC
+// ─────────────────────────────────────────────────────────
+const MONTH_NAMES  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const SHORT_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const today = new Date();
+let curYear  = today.getFullYear();
+let curMonth = today.getMonth();
+let selectedHabit = -1;
+
+const DEFAULT_HABITS=[
+  {name:'⏰ Wake up 05:00',ico:''},
+  {name:'🤸 Gym',ico:''},
+  {name:'📚 Reading',ico:''},
+  {name:'💰 Budget Track',ico:''},
+  {name:'💻 Project Work',ico:''},
+  {name:'🚫 No Alcohol',ico:''},
+  {name:'🤳 Social Detox',ico:''},
+  {name:'📰 Journaling',ico:''},
+  {name:'🧊 Cold Shower',ico:''},
+];
+
+let habits = [];
+let data   = {};
+
+function daysInMonth(y,m){ return new Date(y,m+1,0).getDate(); }
+
+function getVal(y,m,hi,d){
+  if(!data[y])return false;
+  if(!data[y][m])return false;
+  if(!data[y][m][hi])return false;
+  return !!data[y][m][hi][d];
+}
+function setVal(y,m,hi,d,v){
+  if(!data[y])data[y]={};
+  if(!data[y][m]){
+    data[y][m]={};
+    habits.forEach((_,i)=>{ data[y][m][i]=Array(daysInMonth(y,m)).fill(false); });
+  }
+  if(!data[y][m][hi]) data[y][m][hi]=Array(daysInMonth(y,m)).fill(false);
+  data[y][m][hi][d]=v;
+}
+
+window.toggleDay = function(hi,d){
+  const isFuture=(curYear>today.getFullYear())||(curYear===today.getFullYear()&&curMonth>today.getMonth())||(curYear===today.getFullYear()&&curMonth===today.getMonth()&&d>today.getDate()-1);
+  if(isFuture)return;
+  setVal(curYear,curMonth,hi,d,!getVal(curYear,curMonth,hi,d));
+  saveData();
+  renderMonth();
+};
+
+function monthCompletionPct(y,m){
+  const days=daysInMonth(y,m);let done=0,total=0;
+  habits.forEach((_,hi)=>{for(let d=0;d<days;d++){total++;if(getVal(y,m,hi,d))done++;}});
+  return total?Math.round(done/total*100):0;
+}
+function habitMonthPct(y,m,hi){
+  const days=daysInMonth(y,m);let done=0;
+  for(let d=0;d<days;d++) if(getVal(y,m,hi,d)) done++;
+  return Math.round(done/days*100);
+}
+function calcStreak(){
+  let streak=0,d=new Date(today);
+  d.setDate(d.getDate()-1);
+  while(true){
+    const y=d.getFullYear(),m=d.getMonth(),day=d.getDate()-1;
+    const allDone=habits.length>0&&habits.every((_,hi)=>getVal(y,m,hi,day));
+    if(!allDone)break;
+    streak++;d.setDate(d.getDate()-1);
+    if(streak>365)break;
+  }
+  return streak;
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+window.showToast = showToast;
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// ── RENDER MONTH ──────────────────────────────────────────
+function renderMonth(){
+  const y=curYear,m=curMonth;
+  const days=daysInMonth(y,m);
+  const isCurrentMonth=(y===today.getFullYear()&&m===today.getMonth());
+  const todayDay=today.getDate();
+
+  document.getElementById('monthLabel').textContent=MONTH_NAMES[m]+' '+y;
+  document.getElementById('daysLabel').textContent=days+' days';
+
+  let totalDone=0,totalPossible=0;
+  const relevantDays=isCurrentMonth?todayDay:days;
+  habits.forEach((_,hi)=>{
+    for(let d=0;d<relevantDays;d++){totalPossible++;if(getVal(y,m,hi,d))totalDone++;}
+  });
+  const pctDone=totalPossible?Math.round(totalDone/totalPossible*100):0;
+  const streak=calcStreak();
+  let perfect=0;
+  for(let d=0;d<(isCurrentMonth?todayDay:days);d++){
+    if(habits.length>0&&habits.every((_,hi)=>getVal(y,m,hi,d)))perfect++;
+  }
+
+  const metricsHtml=`
+    <div class="metric"><div class="lbl">Completion</div><div class="val">${pctDone}%</div><div class="sub">this month</div></div>
+    <div class="metric"><div class="lbl">Perfect Days</div><div class="val">${perfect}</div><div class="sub">all habits done</div></div>
+    <div class="metric"><div class="lbl">Streak</div><div class="val">${streak}</div><div class="sub">day streak</div></div>
+  `;
+  document.getElementById('metricsStrip').innerHTML=metricsHtml;
+  const sidebar=document.getElementById('metricsSidebar');
+  if(sidebar)sidebar.innerHTML=metricsHtml;
+
+  let headHtml=`<tr><th class="hcol">MY HABITS</th>`;
+  for(let d=1;d<=days;d++){
+    const isTodayCol=isCurrentMonth&&d===todayDay;
+    headHtml+=`<th class="${isTodayCol?'today-col':''}">${d}</th>`;
+  }
+  headHtml+=`</tr>`;
+  document.getElementById('tHead').innerHTML=headHtml;
+
+  let bodyHtml='';
+  habits.forEach((h,hi)=>{
+    bodyHtml+=`<tr>`;
+    bodyHtml+=`<td class="hcol"><div class="hcol-content">${h.ico?`<span class="hcol-ico">${h.ico}</span>`:''}<span class="hcol-name">${escHtml(h.name)}</span></div></td>`;
+    for(let d=0;d<days;d++){
+      const isFuture=(y>today.getFullYear())||(y===today.getFullYear()&&m>today.getMonth())||(y===today.getFullYear()&&m===today.getMonth()&&d>=todayDay);
+      const val=getVal(y,m,hi,d);
+      const isTodayCol=isCurrentMonth&&(d+1)===todayDay;
+      bodyHtml+=`<td class="${isTodayCol?'today-col':''}"><div class="cb ${val?'on':''} ${isFuture?'future':''}" onclick="toggleDay(${hi},${d})"></div></td>`;
+    }
+    bodyHtml+=`</tr>`;
+  });
+  document.getElementById('tBody').innerHTML=bodyHtml;
+
+  let footHtml=`<tr><td class="hcol">Day %</td>`;
+  for(let d=0;d<days;d++){
+    const total=habits.length;
+    const done=habits.filter((_,hi)=>getVal(y,m,hi,d)).length;
+    const pct=total?Math.round(done/total*100):0;
+    const cls=pct>=80?'pct-good':pct>=40?'pct-mid':'pct-low';
+    const isTodayCol=isCurrentMonth&&(d+1)===todayDay;
+    footHtml+=`<td class="${isTodayCol?'today-col':''}"><span class="${pct>0?cls:''}">${pct?pct+'%':'-'}</span></td>`;
+  }
+  footHtml+=`</tr>`;
+  document.getElementById('tFoot').innerHTML=footHtml;
+
+  if(isCurrentMonth){
+    setTimeout(()=>{
+      const wrap=document.getElementById('tblScroll');
+      const colW=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--col-day'))||30;
+      const habitW=parseInt(getComputedStyle(document.documentElement).getPropertyValue('--col-habit'))||160;
+      const scrollTo=habitW+(todayDay-4)*colW;
+      if(scrollTo>0)wrap.scrollLeft=Math.max(0,scrollTo);
+    },50);
+  }
+
+  renderManageList();
+}
+
+// ── MANAGE ───────────────────────────────────────────────
+function renderManageList(){
+  const el = document.getElementById('manageList');
+  if(!el) return;
+  el.innerHTML = habits.map((h,i)=>`
+    <div class="habit-manage-row">
+      ${h.ico?`<span class="hmr-ico">${h.ico}</span>`:''}
+      <span class="hmr-name" id="hmr-name-${i}">${escHtml(h.name)}</span>
+      <div class="hmr-btns" id="hmr-btns-${i}">
+        <button class="hmr-btn" onclick="moveHabit(${i},-1)" ${i===0?'disabled':''}>↑</button>
+        <button class="hmr-btn" onclick="moveHabit(${i},1)"  ${i===habits.length-1?'disabled':''}>↓</button>
+        <button class="hmr-btn edit" onclick="startEdit(${i})">Edit</button>
+        <button class="hmr-btn del"  onclick="deleteHabit(${i})">✕</button>
+      </div>
+    </div>`).join('');
+
+  // Update delete-all buttons disabled state
+  const hasHabits = habits.length > 0;
+  const btn1 = document.getElementById('deleteAllBtn');
+  const btn2 = document.getElementById('dangerDeleteBtn');
+  if(btn1) btn1.disabled = !hasHabits;
+  if(btn2) btn2.disabled = !hasHabits;
+}
+
+window.startEdit = function(i){
+  const nameEl=document.getElementById('hmr-name-'+i);
+  const btnsEl=document.getElementById('hmr-btns-'+i);
+  nameEl.outerHTML=`<input class="hmr-input" id="hmr-input-${i}" value="${escHtml(habits[i].name)}" onkeydown="if(event.key==='Enter')saveEdit(${i})"/>`;
+  btnsEl.innerHTML=`<button class="hmr-save" onclick="saveEdit(${i})">Save</button>
+    <button class="hmr-btn" onclick="renderManageListGlobal()">Cancel</button>`;
+  setTimeout(()=>{const inp=document.getElementById('hmr-input-'+i);if(inp){inp.focus();inp.select();}},40);
+};
+window.renderManageListGlobal = ()=>renderManageList();
+
+window.saveEdit = function(i){
+  const inp=document.getElementById('hmr-input-'+i);
+  const newName=inp?inp.value.trim():'';
+  if(!newName){showToast('Name cannot be empty');return;}
+  habits[i].name=newName;
+  saveData();renderMonth();showToast('Habit renamed!');
+};
+
+window.moveHabit = function(i,dir){
+  const j=i+dir;if(j<0||j>=habits.length)return;
+  [habits[i],habits[j]]=[habits[j],habits[i]];
+  Object.keys(data).forEach(y=>{
+    Object.keys(data[y]).forEach(m=>{
+      const tmp=data[y][m][i];data[y][m][i]=data[y][m][j];data[y][m][j]=tmp;
+    });
+  });
+  saveData();renderMonth();showToast(dir===-1?'↑ Moved up':'↓ Moved down');
+};
+
+window.deleteHabit = function(i){
+  if(!confirm('Delete "'+habits[i].name+'"?\nAll data will be erased.'))return;
+  habits.splice(i,1);
+  Object.keys(data).forEach(y=>{
+    Object.keys(data[y]).forEach(m=>{
+      const newM={};
+      habits.forEach((_,newHi)=>{
+        const oldHi=newHi>=i?newHi+1:newHi;
+        newM[newHi]=data[y][m][oldHi]||Array(daysInMonth(+y,+m)).fill(false);
+      });
+      data[y][m]=newM;
+    });
+  });
+  selectedHabit=-1;saveData();renderMonth();
+  if(document.getElementById('view-year').classList.contains('active'))renderYear();
+  showToast('Habit deleted');
+};
+
+window.addHabit = function(){
+  const inp=document.getElementById('newHabit');
+  const name=inp.value.trim();if(!name)return;
+  habits.push({name,ico:''});
+  Object.keys(data).forEach(y=>{
+    Object.keys(data[y]).forEach(m=>{
+      data[y][m][habits.length-1]=Array(daysInMonth(+y,+m)).fill(false);
+    });
+  });
+  inp.value='';saveData();renderMonth();
+  if(document.getElementById('view-year').classList.contains('active'))renderYear();
+  showToast('Habit added!');
+};
+
+// ══════════════════════════════════════════════
+// ── BULK MANAGEMENT LOGIC (NEW) ──────────────
+// ══════════════════════════════════════════════
+
+let activeBulkTab = 'type';
+let importSeparator = 'newline';
+
+// ── Open / close bulk add panel ──
+window.openBulkAdd = function(){
+  const panel = document.getElementById('bulkAddPanel');
+  panel.classList.add('open');
+  panel.scrollIntoView({behavior:'smooth',block:'nearest'});
+  setTimeout(()=>document.getElementById('bulkTextarea').focus(), 200);
+};
+window.closeBulkAdd = function(){
+  document.getElementById('bulkAddPanel').classList.remove('open');
+  document.getElementById('bulkTextarea').value = '';
+  document.getElementById('importPasteArea').value = '';
+  document.getElementById('bulkPreview').classList.remove('visible');
+  document.getElementById('bulkPreview').textContent = '';
+  document.getElementById('importPreview').classList.remove('visible');
+  document.getElementById('importPreview').textContent = '';
+  document.getElementById('bulkCountBadge').style.display = 'none';
+};
+
+// ── Switch tabs ──
+window.switchBulkTab = function(tab){
+  activeBulkTab = tab;
+  document.querySelectorAll('.bulk-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.bulk-tab-content').forEach(c=>c.classList.remove('active'));
+  document.getElementById('btab-'+tab).classList.add('active');
+  document.getElementById('bcontent-'+tab).classList.add('active');
+};
+
+// ── Parse typed text ──
+function parseHabitLines(raw){
+  return raw
+    .split('\n')
+    .map(l=>l.trim())
+    .filter(l=>l.length > 0)
+    .map(l=>{
+      // Deduplicate against existing habits (case-insensitive)
+      return l;
+    });
+}
+
+// ── Parse import text based on selected separator ──
+function parseImportText(raw){
+  let lines;
+  if(importSeparator === 'comma') {
+    lines = raw.split(',');
+  } else if(importSeparator === 'semicolon') {
+    lines = raw.split(';');
+  } else {
+    lines = raw.split('\n');
+  }
+  return lines.map(l=>l.trim()).filter(l=>l.length>0);
+}
+
+// ── Preview update for type tab ──
+window.updateBulkPreview = function(){
+  const raw = document.getElementById('bulkTextarea').value;
+  const names = parseHabitLines(raw);
+  const preview = document.getElementById('bulkPreview');
+  const badge = document.getElementById('bulkCountBadge');
+  const submitBtn = document.getElementById('bulkSubmitBtn');
+
+  if(names.length === 0){
+    preview.classList.remove('visible');
+    badge.style.display = 'none';
+    submitBtn.disabled = true;
+    return;
+  }
+  // Check duplicates
+  const existing = new Set(habits.map(h=>h.name.toLowerCase()));
+  const newOnes = names.filter(n=>!existing.has(n.toLowerCase()));
+  const dupes = names.length - newOnes.length;
+
+  preview.classList.add('visible');
+  preview.innerHTML = `
+    ✅ <strong>${newOnes.length}</strong> new habit${newOnes.length!==1?'s':''} to add
+    ${dupes > 0 ? `· <span style="color:var(--amber)">⚠️ ${dupes} duplicate${dupes!==1?'s':''} will be skipped</span>` : ''}
+    <div class="tag-list">
+      ${newOnes.slice(0,8).map(n=>`<span class="habit-tag">${escHtml(n)}</span>`).join('')}
+      ${newOnes.length>8?`<span class="habit-tag">+${newOnes.length-8} more</span>`:''}
+    </div>
+  `;
+  badge.style.display = 'block';
+  badge.textContent = `${newOnes.length} habit${newOnes.length!==1?'s':''} ready`;
+  submitBtn.disabled = newOnes.length === 0;
+};
+
+// ── Preview update for import tab ──
+window.updateImportPreview = function(){
+  const raw = document.getElementById('importPasteArea').value;
+  const names = parseImportText(raw);
+  const preview = document.getElementById('importPreview');
+
+  if(names.length === 0){ preview.classList.remove('visible'); return; }
+  const existing = new Set(habits.map(h=>h.name.toLowerCase()));
+  const newOnes = names.filter(n=>!existing.has(n.toLowerCase()));
+  const dupes = names.length - newOnes.length;
+
+  preview.classList.add('visible');
+  preview.innerHTML = `
+    ✅ <strong>${newOnes.length}</strong> habit${newOnes.length!==1?'s':''} found
+    ${dupes>0?`· <span style="color:var(--amber)">⚠️ ${dupes} duplicate${dupes!==1?'s':''} skipped</span>`:''}
+  `;
+};
+
+// ── Format chip selection ──
+window.setImportFormat = function(fmt){
+  importSeparator = fmt;
+  document.querySelectorAll('.format-chip').forEach(c=>c.classList.remove('active'));
+  document.getElementById('fmt-'+fmt).classList.add('active');
+  updateImportPreview();
+};
+
+// ── Drag-and-drop file import ──
+window.handleDragOver = function(e){
+  e.preventDefault();
+  document.getElementById('importDropZone').classList.add('drag-over');
+};
+window.handleDragLeave = function(e){
+  document.getElementById('importDropZone').classList.remove('drag-over');
+};
+window.handleFileDrop = function(e){
+  e.preventDefault();
+  document.getElementById('importDropZone').classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if(file) readImportFile(file);
+};
+window.handleFileImport = function(e){
+  const file = e.target.files[0];
+  if(file) readImportFile(file);
+};
+
+function readImportFile(file){
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    const content = e.target.result;
+    // For CSV take first column, for txt take each line
+    const lines = content.split('\n')
+      .map(l=>{
+        // Handle CSV: take first column
+        const parts = l.split(',');
+        return parts[0].replace(/^["']|["']$/g,'').trim();
+      })
+      .filter(l=>l.length>0 && l.toLowerCase()!=='habit' && l.toLowerCase()!=='name');
+    document.getElementById('importPasteArea').value = lines.join('\n');
+    updateImportPreview();
+    showToast(`📂 Read ${lines.length} lines from ${file.name}`);
+  };
+  reader.readAsText(file);
+}
+
+// ── Submit bulk add ──
+window.submitBulkAdd = function(){
+  let names;
+  if(activeBulkTab === 'type'){
+    names = parseHabitLines(document.getElementById('bulkTextarea').value);
+  } else {
+    const pasteVal = document.getElementById('importPasteArea').value;
+    names = parseImportText(pasteVal);
+  }
+
+  const existing = new Set(habits.map(h=>h.name.toLowerCase()));
+  const newOnes = names.filter(n=>!existing.has(n.toLowerCase()));
+
+  if(newOnes.length === 0){
+    showToast('No new habits to add (all duplicates)');
+    return;
+  }
+
+  newOnes.forEach(name=>{
+    habits.push({name, ico:''});
+    Object.keys(data).forEach(y=>{
+      Object.keys(data[y]).forEach(m=>{
+        data[y][m][habits.length-1]=Array(daysInMonth(+y,+m)).fill(false);
+      });
+    });
+  });
+
+  saveData();
+  renderMonth();
+  if(document.getElementById('view-year').classList.contains('active')) renderYear();
+
+  showToast(`✅ Added ${newOnes.length} habit${newOnes.length!==1?'s':''}!`);
+  closeBulkAdd();
+};
+
+// ══════════════════════════════════════════════
+// ── DELETE ALL MODAL LOGIC (NEW) ─────────────
+// ══════════════════════════════════════════════
+
+window.openDeleteAllModal = function(){
+  if(habits.length === 0){ showToast('No habits to delete'); return; }
+  // Update badge
+  document.getElementById('modalHabitCount').textContent =
+    `${habits.length} habit${habits.length!==1?'s':''}`;
+  // Clear confirm input
+  const input = document.getElementById('deleteConfirmInput');
+  input.value = '';
+  document.getElementById('confirmDeleteBtn').disabled = true;
+  input.classList.remove('valid');
+  // Open modal
+  document.getElementById('deleteAllModal').classList.add('open');
+  setTimeout(()=>input.focus(), 250);
+};
+
+window.closeDeleteAllModal = function(){
+  document.getElementById('deleteAllModal').classList.remove('open');
+};
+
+window.checkDeleteConfirm = function(){
+  const val = document.getElementById('deleteConfirmInput').value;
+  const btn = document.getElementById('confirmDeleteBtn');
+  const inp = document.getElementById('deleteConfirmInput');
+  const isValid = val.trim().toUpperCase() === 'DELETE';
+  btn.disabled = !isValid;
+  inp.classList.toggle('valid', isValid);
+};
+
+window.confirmDeleteAll = function(){
+  const val = document.getElementById('deleteConfirmInput').value;
+  if(val.trim().toUpperCase() !== 'DELETE') return;
+
+  const count = habits.length;
+  habits = [];
+  data   = {};
+  selectedHabit = -1;
+
+  saveData();
+  renderMonth();
+  if(document.getElementById('view-year').classList.contains('active')) renderYear();
+
+  closeDeleteAllModal();
+  showToast(`🗑️ Deleted all ${count} habit${count!==1?'s':''}`);
+};
+
+// Close modal on backdrop click
+document.getElementById('deleteAllModal').addEventListener('click', function(e){
+  if(e.target === this) closeDeleteAllModal();
+});
+
+// ── Danger zone toggle ──
+window.toggleDangerZone = function(){
+  const zone = document.getElementById('dangerZoneSection');
+  const toggle = document.getElementById('dangerZoneToggle');
+  const isOpen = zone.style.display !== 'none';
+  zone.style.display = isOpen ? 'none' : 'block';
+  toggle.classList.toggle('open-state', !isOpen);
+};
+
+// ── YEAR VIEW ────────────────────────────────────────────
+function renderYear(){
+  const y=curYear;
+  document.getElementById('yearLabel').textContent='Year '+y;
+  let totalDone=0,totalPossible=0,bestMonth='',bestPct=0,totalChecks=0;
+  for(let m=0;m<12;m++){
+    const days=daysInMonth(y,m),pct=monthCompletionPct(y,m);
+    if(pct>bestPct){bestPct=pct;bestMonth=SHORT_MONTHS[m];}
+    for(let d=0;d<days;d++) habits.forEach((_,hi)=>{totalPossible++;if(getVal(y,m,hi,d)){totalDone++;totalChecks++;}});
+  }
+  const yearPct=totalPossible?Math.round(totalDone/totalPossible*100):0,streak=calcStreak();
+  document.getElementById('yearMetrics').innerHTML=`
+    <div class="metric"><div class="lbl">Year avg</div><div class="val">${yearPct}%</div><div class="sub">completion</div></div>
+    <div class="metric"><div class="lbl">Best month</div><div class="val">${bestMonth||'-'}</div><div class="sub">${bestPct}%</div></div>
+    <div class="metric"><div class="lbl">Total checks</div><div class="val">${totalChecks}</div><div class="sub">this year</div></div>
+    <div class="metric"><div class="lbl">Streak</div><div class="val">${streak}</div><div class="sub">day streak</div></div>`;
+
+  document.getElementById('habitPills').innerHTML=
+    `<div class="hpill ${selectedHabit===-1?'sel':''}" onclick="selHabit(-1)">All habits</div>`+
+    habits.map((h,i)=>`<div class="hpill ${selectedHabit===i?'sel':''}" onclick="selHabit(${i})">${escHtml(h.name)}</div>`).join('');
+
+  document.getElementById('hmLabel').textContent=selectedHabit===-1?'All habits combined':habits[selectedHabit].name;
+
+  let hmHtml='';
+  for(let m=0;m<12;m++){
+    const days=daysInMonth(y,m);
+    hmHtml+=`<div class="hm-month"><div class="hm-month-label">${SHORT_MONTHS[m]}</div>`;
+    for(let d=0;d<days;d++){
+      let level=0;
+      if(selectedHabit===-1){const done=habits.filter((_,hi)=>getVal(y,m,hi,d)).length,ratio=habits.length?done/habits.length:0;level=ratio===0?0:ratio<.26?1:ratio<.51?2:ratio<.76?3:4;}
+      else{level=getVal(y,m,selectedHabit,d)?4:0;}
+      hmHtml+=`<div class="hm-day l${level}"></div>`;
+    }
+    for(let d=days;d<31;d++)hmHtml+=`<div class="hm-day empty"></div>`;
+    hmHtml+='</div>';
+  }
+  document.getElementById('heatmapGrid').innerHTML=hmHtml;
+
+  let gridHtml='';
+  for(let m=0;m<12;m++){
+    const pct=selectedHabit===-1?monthCompletionPct(y,m):habitMonthPct(y,m,selectedHabit);
+    gridHtml+=`<div class="month-mini"><div class="mm-name">${MONTH_NAMES[m]}</div><div class="mm-bar-wrap"><div class="mm-bar" style="width:${pct}%"></div></div><div class="mm-pct">${pct}%</div></div>`;
+  }
+  document.getElementById('yearMonthGrid').innerHTML=gridHtml;
+}
+
+window.selHabit  = (i)=>{ selectedHabit=i; renderYear(); };
+window.goToday   = ()=>{ curYear=today.getFullYear(); curMonth=today.getMonth(); renderMonth(); };
+window.changeMonth = (d)=>{ curMonth+=d; if(curMonth<0){curMonth=11;curYear--;} if(curMonth>11){curMonth=0;curYear++;} renderMonth(); };
+window.changeYear  = (d)=>{ curYear+=d; renderYear(); };
+
+window.switchView = (v)=>{
+  document.querySelectorAll('.view').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  document.querySelectorAll('.tab').forEach(el=>{ if(el.textContent.toLowerCase().trim()===v) el.classList.add('active'); });
+  if(v==='year')   renderYear();
+  if(v==='manage') renderManageList();
+};
+
+// ── Format chip clicks ──
+document.getElementById('fmt-newline').addEventListener('click',()=>setImportFormat('newline'));
+document.getElementById('fmt-comma').addEventListener('click',()=>setImportFormat('comma'));
+document.getElementById('fmt-semicolon').addEventListener('click',()=>setImportFormat('semicolon'));
+
+function initUI(){
+  document.getElementById('todayDate').textContent =
+    today.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}).toUpperCase();
+  renderMonth();
+}
+
+</script>
+</body>
+</html>
